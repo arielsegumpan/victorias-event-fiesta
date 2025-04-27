@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignIdFor(Fiesta::class, 'fiesta_id')->constrained('fiestas')->cascadeOnDelete();
             $table->integer('rating')->default(0);
             $table->longText('review')->nullable();
-            $table->string('review_image')->nullable();
-            $table->string('review_title')->nullable();
-            $table->string('review_slug')->unique()->index();
+            $table->json('review_images')->nullable();
+            $table->string('review_title')->nullable()->unique();
+            $table->string('review_slug')->nullable()->unique()->index();
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b22985931ed3e2fc2598c3fde6e20f9",
+    "content-hash": "d14eca29641263744ebb6a820ab34e18",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7703,70 +7703,6 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
-        },
-        {
-            "name": "woenel/prpcmblmts",
-            "version": "v2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/woenel/prpcmblmts.git",
-                "reference": "26bad5918d387482960dbcce4859631e28d10de5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/woenel/prpcmblmts/zipball/26bad5918d387482960dbcce4859631e28d10de5",
-                "reference": "26bad5918d387482960dbcce4859631e28d10de5",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "laravel/framework": "^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Woenel\\Prpcmblmts\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Woenel\\Prpcmblmts\\": "src/"
-                },
-                "classmap": [
-                    "src/database/seeders"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ronnel Martinez",
-                    "email": "ronnel@mronnel.com"
-                }
-            ],
-            "description": "Philippines region, province, cities/municipalities and barangays Laravel migration and table seeder.",
-            "keywords": [
-                "barangay",
-                "city",
-                "laravel",
-                "migration",
-                "municipality",
-                "philippines",
-                "province",
-                "region",
-                "seeder"
-            ],
-            "support": {
-                "issues": "https://github.com/woenel/prpcmblmts/issues",
-                "source": "https://github.com/woenel/prpcmblmts/tree/v2"
-            },
-            "time": "2025-03-01T02:38:45+00:00"
         }
     ],
     "packages-dev": [
@@ -10057,9 +9993,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "woenel/prpcmblmts": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

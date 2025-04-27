@@ -87,4 +87,14 @@ class User extends Authenticatable implements FilamentUser
             default => '/', // fallback URL
         };
     }
+
+    public function reviews() : HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function comments() : HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

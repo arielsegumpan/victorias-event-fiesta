@@ -22,12 +22,9 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('contact_number')->nullable();
-            $table->foreignIdFor(PhilippineRegion::class, 'region_id')->nullable()->constrained('philippine_regions')->cascadeOnDelete();
-            $table->foreignIdFor(PhilippineProvince::class, 'province_id')->nullable()->constrained('philippine_provinces')->cascadeOnDelete();
-            $table->foreignIdFor(PhilippineCity::class, 'city_id')->nullable()->constrained('philippine_cities')->cascadeOnDelete();
-            $table->foreignIdFor(PhilippineBarangay::class, 'barangay_id')->nullable()->constrained('philippine_barangays')->cascadeOnDelete();
-            $table->string('street')->nullable();
-            $table->string('full_address')->nullable();
+            $table->string('address_1')->nullable();
+            $table->string('address_2')->nullable();
+            $table->json('bio')->nullable();
             $table->timestamps();
         });
     }

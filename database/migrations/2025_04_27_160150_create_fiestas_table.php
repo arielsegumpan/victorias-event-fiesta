@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Barangay;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,18 +15,17 @@ return new class extends Migration
     {
         Schema::create('fiestas', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Barangay::class, 'barangay_id')->constrained('barangays')->cascadeOnDelete();
             $table->foreignIdFor(User::class, 'created_by')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('f_name')->unique();
             $table->string('f_slug')->unique()->index();
-            $table->json('f_image')->nullable();
+            $table->json('f_images')->nullable();
             $table->longText('f_description')->nullable();
             $table->dateTime('f_start_date')->nullable();
             $table->dateTime('f_end_date')->nullable();
-            $table->json('f_location')->nullable();
-            $table->boolean('is_active')->default(1);
             $table->boolean('is_featured')->default(0);
-            $table->boolean('is_approved')->default(1);
+            $table->boolean('is_published')->default(1);
             $table->timestamps();
         });
     }

@@ -9,21 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Fiesta extends Model
 {
     protected $fillable = [
+        'barangay_id',
+        'created_by',
         'category_id',
         'f_name',
         'f_slug',
-        'f_image',
+        'f_images',
         'f_description',
         'f_start_date',
         'f_end_date',
-        'f_location',
-        'is_active',
         'is_featured',
         'is_approved',
     ];
 
     protected $casts = [
-        'f_image' => 'array',
+        'f_images' => 'array',
         'f_location' => 'array',
         'f_start_date' => 'datetime',
         'f_end_date' => 'datetime',
@@ -44,5 +44,10 @@ class Fiesta extends Model
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'fiesta_tag', 'fiesta_id', 'tag_id')->withTimestamps();
+    }
+
+    public function barangay() : BelongsTo
+    {
+        return $this->belongsTo(Barangay::class, 'barangay_id');
     }
 }

@@ -16,47 +16,20 @@ class UserProfile extends Model
         'first_name',
         'last_name',
         'contact_number',
-        'region_id',
-        'province_id',
-        'city_id',
-        'barangay_id',
-        'street',
-        'full_address',
+        'address_1',
+        'address_2',
+        'bio'
     ];
 
     protected $casts = [
-        'region_id' => 'integer',
-        'province_id' => 'integer',
-        'city_id' => 'integer',
-        'barangay_id' => 'integer',
+        'bio' => 'array',
+        'address_1' => 'string',
+        'address_2' => 'string',
     ];
 
 
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function region() : BelongsTo
-    {
-        return $this->belongsTo(PhilippineRegion::class, 'region_id');
-    }
-
-    public function province() : BelongsTo
-    {
-        return $this->belongsTo(PhilippineProvince::class, 'province_id');
-    }
-
-    public function city() : BelongsTo
-    {
-        return $this->belongsTo(PhilippineCity::class, 'city_id');
-    }
-    public function barangay() : BelongsTo
-    {
-        return $this->belongsTo(PhilippineBarangay::class, 'barangay_id');
-    }
-    public function getFullAddressAttribute() : string
-    {
-        return trim("{$this->street}, {$this->barangay->name}, {$this->city->name}, {$this->province->name}, {$this->region->name}");
     }
 }
