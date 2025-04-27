@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
+use App\Models\Comments;
 use App\Models\UserProfile;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -95,6 +97,6 @@ class User extends Authenticatable implements FilamentUser
 
     public function comments() : HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comments::class);
     }
 }
