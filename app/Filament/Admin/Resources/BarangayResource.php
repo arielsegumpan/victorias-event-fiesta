@@ -17,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\ToggleButtons;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\BarangayResource\Pages;
@@ -27,6 +28,9 @@ class BarangayResource extends Resource
     protected static ?string $model = Barangay::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+
+    protected static ?int $navigationSort = 1;
+
 
     public static function form(Form $form): Form
     {
@@ -69,6 +73,7 @@ class BarangayResource extends Resource
                             '1' => 'primary',
                             '0' => 'danger',
                         ])
+                        ->dehydrated()
                         ->default('1'),
 
                         ToggleButtons::make('is_featured')
@@ -87,6 +92,7 @@ class BarangayResource extends Resource
                             '1' => 'primary',
                             '0' => 'danger',
                         ])
+                        ->dehydrated()
                         ->default('1'),
                     ])
                     ->columns([
@@ -116,6 +122,13 @@ class BarangayResource extends Resource
                         ->image()
                         ->required()
                         ->maxSize(1024)
+                        ->imageEditor()
+                        ->imageEditorAspectRatios([
+                            null,
+                            '16:9',
+                            '4:3',
+                            '1:1',
+                        ])
                         ->columnSpanFull(),
                     ]),
 
@@ -125,7 +138,15 @@ class BarangayResource extends Resource
                         ->hiddenlabel()
                         ->multiple()
                         ->image()
-                        ->maxSize(1024*5)
+                        ->maxSize('2048')
+                        ->maxParallelUploads(5)
+                        ->imageEditor()
+                        ->imageEditorAspectRatios([
+                            null,
+                            '16:9',
+                            '4:3',
+                            '1:1',
+                        ])
                         ->columnSpanFull(),
                     ])
                 ])
@@ -141,7 +162,7 @@ class BarangayResource extends Resource
                 'sm' => 1,
                 'md' => 5,
                 'lg' => 5,
-            ]);
+        ]);
     }
 
     public static function table(Table $table): Table

@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Fiesta;
 use Filament\Forms\Set;
+use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -14,6 +15,8 @@ use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -30,6 +33,8 @@ class FiestaResource extends Resource
     protected static ?string $model = Fiesta::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+
+    protected static ?int $navigationSort = 0;
 
     public static function form(Form $form): Form
     {
@@ -64,12 +69,66 @@ class FiestaResource extends Resource
                         ->native(false)
                         ->searchable()
                         ->preload()
-                        ->optionsLimit(6),
+                        ->optionsLimit(6)
+                        ->createOptionForm([
+                            Group::make([
+                                Section::make()
+                                ->schema([
+                                    TextInput::make('cat_name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->unique(Category::class, 'cat_slug', ignoreRecord: true)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('cat_slug', Str::slug($state))),
+
+                                    TextInput::make('cat_slug')
+                                    ->label('Slug')
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->unique(Category::class, 'cat_slug', ignoreRecord: true),
+
+                                    Textarea::make('cat_description')
+                                    ->label('Description')
+                                    ->maxLength(65535)
+                                    ->columnSpanFull()
+                                    ->rows(6)
+                                ])
+                                ->columnSpan([
+                                    'sm' => 1,
+                                    'md' => 3,
+                                    'lg' => 3,
+                                ]),
+
+                                Section::make()
+                                ->schema([
+                                    FileUpload::make('cat_image')
+                                    ->hiddenlabel()
+                                    ->image()
+                                    ->imageEditor()
+                                    ->maxSize('2048')
+                                ])
+                                ->columnSpan([
+                                    'sm' => 1,
+                                    'md' => 2,
+                                    'lg' => 2,
+                                ])
+                            ])
+                            ->columns([
+                                'sm' => 1,
+                                'md' => 5,
+                                'lg' => 5,
+                            ]),
+                        ])
+                        ->columnSpanFull()
+
                     ])
                     ->columns([
                         'sm' => 1,
-                        'md' => 3,
-                        'lg' => 3,
+                        'md' => 2,
+                        'lg' => 2,
                     ]),
 
                     TextInput::make('f_name')
@@ -95,6 +154,17 @@ class FiestaResource extends Resource
                         'codeBlock',
                     ])
                     ->maxLength(65535),
+
+                    TagsInput::make('tags')
+                    ->label('Tags')
+                    ->reorderable()
+                    ->splitKeys(['Tab', ' '])
+                    ->nestedRecursiveRules([
+                        'min:3',
+                        'max:255',
+                    ])
+                    ->columnSpanFull()
+
                 ])
                 ->columnSpan([
                     'sm' => 1,
@@ -152,7 +222,7 @@ class FiestaResource extends Resource
                         'lg' => 2,
                     ]),
 
-                    Section::make()
+                    Section::make('Images')
                     ->schema([
                         FileUpload::make('f_images')
                         ->hiddenlabel()

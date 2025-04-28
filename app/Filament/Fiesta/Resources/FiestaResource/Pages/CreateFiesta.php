@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateFiesta extends CreateRecord
 {
     protected static string $resource = FiestaResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

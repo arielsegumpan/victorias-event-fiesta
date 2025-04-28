@@ -42,8 +42,8 @@ class FiestaPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Fiesta/Widgets'), for: 'App\\Filament\\Fiesta\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
