@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\FiestaResource\Pages;
+namespace App\Filament\Fiesta\Resources\FiestaResource\Pages;
 
-use App\Filament\Admin\Resources\FiestaResource;
+use App\Filament\Fiesta\Resources\FiestaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -15,10 +15,5 @@ class EditFiesta extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
     }
 }

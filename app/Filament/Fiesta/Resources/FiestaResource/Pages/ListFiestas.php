@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\FiestaResource\Pages;
+namespace App\Filament\Fiesta\Resources\FiestaResource\Pages;
 
-use App\Filament\Admin\Resources\FiestaResource;
+use App\Filament\Fiesta\Resources\FiestaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -13,7 +13,7 @@ class ListFiestas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->icon('heroicon-o-plus')->label('New Fiesta'),
+            Actions\CreateAction::make(),
         ];
     }
 }

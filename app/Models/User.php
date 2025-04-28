@@ -55,12 +55,6 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function userProfile() : HasOne
-    {
-        return $this->hasOne(UserProfile::class);
-    }
-
-
     public function canAccessPanel(Panel $panel): bool
     {
         // Get the user and their roles for debugging
@@ -88,6 +82,11 @@ class User extends Authenticatable implements FilamentUser
             'fiesta' => url(Filament::getPanel('fiesta')->getPath()),
             default => '/', // fallback URL
         };
+    }
+
+    public function userProfile() : HasOne
+    {
+        return $this->hasOne(UserProfile::class);
     }
 
     public function reviews() : HasMany
