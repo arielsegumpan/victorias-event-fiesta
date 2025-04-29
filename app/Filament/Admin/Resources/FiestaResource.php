@@ -8,24 +8,37 @@ use App\Models\Fiesta;
 use Filament\Forms\Set;
 use App\Models\Category;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\Split;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Group as InfoG;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Infolists\Components\Section as InfoSec;
 use App\Filament\Admin\Resources\FiestaResource\Pages;
+use App\Filament\Admin\Resources\FiestaResource\Pages\EditFiesta;
+use App\Filament\Admin\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Admin\Resources\FiestaResource\RelationManagers;
 
 class FiestaResource extends Resource
@@ -35,6 +48,8 @@ class FiestaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
 
     protected static ?int $navigationSort = 0;
+
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function form(Form $form): Form
     {
@@ -46,7 +61,7 @@ class FiestaResource extends Resource
                     Group::make([
                         Select::make('barangay_id')
                         ->label('Barangay')
-                        ->relationship(name: 'barangay', titleAttribute:'brgy_name', ignoreRecord: true)
+                        ->relationship(name: 'barangay', titleAttribute:'brgy_name')
                         ->required()
                         ->native(false)
                         ->searchable()
@@ -55,7 +70,7 @@ class FiestaResource extends Resource
 
                         Select::make('created_by')
                         ->label('Created By')
-                        ->relationship(name: 'user', titleAttribute:'name', ignoreRecord: true)
+                        ->relationship(name: 'user', titleAttribute:'name')
                         ->required()
                         ->native(false)
                         ->searchable()
@@ -64,7 +79,7 @@ class FiestaResource extends Resource
 
                         Select::make('category_id')
                         ->label('Category')
-                        ->relationship(name: 'category', titleAttribute:'cat_name', ignoreRecord: true)
+                        ->relationship(name: 'category', titleAttribute:'cat_name')
                         ->required()
                         ->native(false)
                         ->searchable()
@@ -176,23 +191,27 @@ class FiestaResource extends Resource
                     Section::make()
                     ->schema([
 
-                        DatePicker::make('f_start_date')
+                        DateTimePicker::make('f_start_date')
                         ->label('Start Date')
+                        ->seconds(false)
                         ->required()
-                        ->format('d/m/Y')
+                        ->format('F j, Y, g:i a')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
-                        ->maxDate(now()),
+                        ->maxDate(now())
+                        ->columnSpanFull(),
 
-                        DatePicker::make('s_start_date')
+                        DateTimePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
-                        ->format('d/m/Y')
+                        ->seconds(false)
+                        ->format('F j, Y, g:i a')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
-                        ->minDate(now()),
+                        ->minDate(now())
+                        ->columnSpanFull(),
 
                         ToggleButtons::make('is_featured')
                         ->label('Is Featured?')
@@ -258,7 +277,36 @@ class FiestaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('f_name')
+                ->label('Fiesta Name')
+                ->searchable()
+                ->sortable()
+                ->size(TextColumn\TextColumnSize::Large)
+                ->description(fn (Fiesta $record) => $record->f_slug),
+
+                TextColumn::make('barangay.brgy_name')
+                ->label('Barangay')
+                ->searchable()
+                ->sortable(),
+
+                TextColumn::make('category.cat_name')
+                ->label('Category')
+                ->searchable()
+                ->sortable()
+                ->badge()
+                ->color('primary'),
+
+                TextColumn::make('f_start_date')
+                ->label('Start Date')
+                ->date('F j, Y, g:i a')
+                ->sortable(),
+
+                TextColumn::make('f_end_date')
+                ->label('End Date')
+                ->date('F j, Y, g:i a')
+                ->sortable(),
+
+
             ])
             ->filters([
                 //
@@ -299,6 +347,125 @@ class FiestaResource extends Resource
             'index' => Pages\ListFiestas::route('/'),
             'create' => Pages\CreateFiesta::route('/create'),
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
+            'view' => Pages\ViewFiesta::route('/{record}'),
         ];
+    }
+
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            ViewFiesta::class,
+            EditFiesta::class,
+        ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+
+                InfoSec::make()
+                ->schema([
+                    Split::make([
+                        ImageEntry::make('f_images')
+                        ->hiddenlabel()
+                        ->height(130)
+                        ->stacked()
+                        ->circular()
+                        ->overlap(8)
+                        ->limit(3)
+                        ->limitedRemainingText()
+                        ->extraImgAttributes([
+                            'loading' => 'lazy',
+                        ])
+                        ->grow(false),
+
+                        InfoG::make([
+                            TextEntry::make('f_name')
+                            ->label('')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->weight('bold'),
+
+                            TextEntry::make('f_slug')
+                            ->label(''),
+
+                            InfoG::make([
+                                TextEntry::make('barangay.brgy_name')
+                                ->label('Barangay')
+                                ->icon('heroicon-o-home-modern')
+                                ->size(TextEntry\TextEntrySize::Large),
+
+                                TextEntry::make('category.cat_name')
+                                ->label('Category')
+                                ->icon('heroicon-o-tag')
+                                ->badge()
+                                ->color('primary'),
+                            ])
+                            ->columns([
+                                'sm' => 1,
+                                'md' => 2,
+                                'lg' => 2,
+                            ]),
+                        ])
+                    ])
+                    ->from('md')
+                    ->columnSpanFull(),
+                ])
+                ->columnSpanFull(),
+
+                InfoSec::make()
+                ->schema([
+                    InfoG::make([
+
+                        IconEntry::make('is_featured')
+                        ->icon(fn (Fiesta $record): string => $record->is_featured ?
+                        'heroicon-o-check-circle' :
+                        'heroicon-o-x-circle'
+                        )
+                        ->color(fn (Fiesta $record): string => $record->is_featured ?
+                        'success' :
+                        'danger'
+                        )
+                        ->label('Is Featured?'),
+
+                        IconEntry::make('is_published')
+                        ->icon(fn (Fiesta $record): string => $record->is_published ?
+                        'heroicon-o-check-circle' :
+                        'heroicon-o-x-circle'
+                        )
+                        ->color(fn (Fiesta $record): string => $record->is_published ?
+                        'success' :
+                        'danger'
+                        )
+                        ->label('Is Published?'),
+
+                        TextEntry::make('f_start_date')
+                        ->label('Start Date')
+                        ->icon('heroicon-o-calendar')
+                        ->date('F j, Y, g:i a'),
+
+                        TextEntry::make('f_end_date')
+                        ->label('End Date')
+                        ->icon('heroicon-o-calendar')
+                        ->date('F j, Y, g:i a'),
+                    ])
+                    ->columns([
+                        'sm' => 1,
+                        'md' => 2,
+                        'lg' => 4,
+                    ])
+                ]),
+
+
+                InfoSec::make()
+                ->schema([
+                    TextEntry::make('f_description')
+                    ->label('')
+                    ->markdown()
+                ])
+
+
+            ]);
     }
 }

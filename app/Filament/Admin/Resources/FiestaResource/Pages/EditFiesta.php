@@ -2,9 +2,10 @@
 
 namespace App\Filament\Admin\Resources\FiestaResource\Pages;
 
-use App\Filament\Admin\Resources\FiestaResource;
 use Filament\Actions;
+use Illuminate\Support\Str;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Admin\Resources\FiestaResource;
 
 class EditFiesta extends EditRecord
 {
@@ -20,5 +21,12 @@ class EditFiesta extends EditRecord
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['f_name'] = Str::title($data['f_name']);
+        $data['f_slug'] = Str::slug($data['f_name']);
+        return $data;
     }
 }

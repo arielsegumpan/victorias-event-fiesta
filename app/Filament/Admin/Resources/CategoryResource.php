@@ -12,7 +12,9 @@ use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -87,7 +89,27 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                ImageColumn::make('cat_image')
+                    ->label('')
+                    ->square()
+                    ->size(50)
+                    ->placeholder('No Image'),
+
+                TextColumn::make('cat_name')
+                    ->label('Name')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->badge()
+                    ->color('primary'),
+
+                TextColumn::make('cat_slug')
+                    ->label('Slug'),
+
+                TextColumn::make('cat_description')
+                    ->label('Description')
+                    ->wrap()
+                    ->limit(70)
             ])
             ->filters([
                 //

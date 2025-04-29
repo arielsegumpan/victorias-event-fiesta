@@ -214,6 +214,7 @@ class BarangayResource extends Resource
             'index' => Pages\ListBarangays::route('/'),
             'create' => Pages\CreateBarangay::route('/create'),
             'edit' => Pages\EditBarangay::route('/{record}/edit'),
+            'view' => Pages\ViewBarangay::route('/{record}'),
         ];
     }
 }

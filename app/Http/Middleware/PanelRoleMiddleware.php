@@ -28,7 +28,8 @@ class PanelRoleMiddleware
         // Define panel-to-role mapping
         $panelRoles = [
             'admin' => 'super_admin',
-            'fiesta' => 'fiesta',
+            'fiesta' => 'barangay captain',
+            'fiesta' => 'barangay_captain',
         ];
 
         $requiredRole = $panelRoles[$currentPanelId] ?? null;

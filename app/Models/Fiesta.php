@@ -30,6 +30,7 @@ class Fiesta extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'is_approved' => 'boolean',
+        'tags' => 'array',
     ];
 
     public function category() : BelongsTo
