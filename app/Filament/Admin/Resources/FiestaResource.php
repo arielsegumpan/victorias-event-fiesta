@@ -449,6 +449,7 @@ class FiestaResource extends Resource
                         ->label('End Date')
                         ->icon('heroicon-o-calendar')
                         ->date('F j, Y, g:i a'),
+
                     ])
                     ->columns([
                         'sm' => 1,

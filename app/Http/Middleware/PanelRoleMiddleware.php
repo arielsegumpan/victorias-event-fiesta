@@ -37,6 +37,8 @@ class PanelRoleMiddleware
         // If no role is mapped for this panel or user doesn't have the role
         if (!$requiredRole || !$user->hasRole($requiredRole)) {
 
+            session()->regenerateToken();
+            
             // Redirect based on user role
             if ($user->hasRole('super_admin')) {
                 return redirect()->route('filament.admin.pages.dashboard');
