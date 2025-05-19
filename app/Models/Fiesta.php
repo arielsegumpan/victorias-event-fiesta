@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Fiesta extends Model
 {
@@ -50,5 +51,11 @@ class Fiesta extends Model
     public function barangay() : BelongsTo
     {
         return $this->belongsTo(Barangay::class, 'barangay_id');
+    }
+
+
+    public function comments() : HasMany
+    {
+        return $this->hasMany(Comments::class);
     }
 }
