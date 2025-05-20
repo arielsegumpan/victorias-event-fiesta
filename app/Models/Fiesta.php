@@ -58,4 +58,10 @@ class Fiesta extends Model
     {
         return $this->hasMany(Comments::class);
     }
+
+
+    public function reviews() : HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
 }

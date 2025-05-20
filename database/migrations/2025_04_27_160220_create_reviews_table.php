@@ -20,8 +20,7 @@ return new class extends Migration
             $table->integer('rating')->default(0);
             $table->longText('review')->nullable();
             $table->json('review_images')->nullable();
-            $table->string('review_title')->nullable()->unique();
-            $table->string('review_slug')->nullable()->unique()->index();
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

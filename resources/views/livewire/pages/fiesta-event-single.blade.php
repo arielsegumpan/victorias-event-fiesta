@@ -152,7 +152,7 @@
                 <!-- END OF MAIN CONTENT -->
 
                 <!-- COMMENT SECTION -->
-                <livewire:components.fiesta-comment :fiesta="$fiesta">
+                <livewire:components.fiesta-review :fiesta="$fiesta">
                 <!-- END OF COMMENT SECTION -->
 
 
@@ -164,18 +164,18 @@
                 <div class="sticky top-0 start-0 py-8 lg:ps-8">
                     <!-- Avatar Media -->
                     <div class="group flex items-center gap-x-3 border-b border-gray-200 pb-8 mb-8 dark:border-neutral-700">
-                    <a class="block shrink-0 focus:outline-hidden" href="#">
-                        <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80" alt="Avatar">
-                    </a>
+                        <a class="block shrink-0 focus:outline-hidden" href="#">
+                            <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80" alt="Avatar">
+                        </a>
 
-                    <a class="group grow block focus:outline-hidden" href="">
-                        <h5 class="group-hover:text-gray-600 group-focus:text-gray-600 text-sm font-semibold text-gray-800 dark:group-hover:text-neutral-400 dark:group-focus:text-neutral-400 dark:text-neutral-200">
-                            {{ $fiesta->user->name }}
-                        </h5>
-                        <p class="text-sm text-gray-500 dark:text-neutral-500">
-                            {{  __('Author') }}
-                        </p>
-                    </a>
+                        <a class="group grow block focus:outline-hidden" href="">
+                            <h5 class="group-hover:text-gray-600 group-focus:text-gray-600 text-sm font-semibold text-gray-800 dark:group-hover:text-neutral-400 dark:group-focus:text-neutral-400 dark:text-neutral-200">
+                                {{ $fiesta->user->name }}
+                            </h5>
+                            <p class="text-sm text-gray-500 dark:text-neutral-500">
+                                {{  __('Author') }}
+                            </p>
+                        </a>
 
                     </div>
                     <!-- End Avatar Media -->
@@ -205,8 +205,123 @@
 
                     </div>
                     @endif
+
+
+
+
+                    <div class="lg:mt-8 ">
+                        <h1 class="mb-5 text-lg font-bold lg:mb-8 lg:text-3xl dark:text-white">{{ __('Event Reviews') }}</h1>
+                                <!-- Header -->
+                        <div class="flex items-center justify-between mb-3 gap-x-3">
+                            <div class="flex items-center gap-x-2">
+                                <h4 class="font-semibold text-gray-800 dark:text-white">
+                                            5.0
+                                </h4>
+
+                                <!-- Rating -->
+                                <div class="flex">
+                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg>
+                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg>
+                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg>
+                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg>
+                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg>
+                                </div>
+                                <!-- End Rating -->
+                                </div>
+
+                                <a class="inline-flex items-center text-xs font-medium text-orange-600 gap-x-1 decoration-2 hover:underline" href="#">
+                                    See all (4)
+                                </a>
+                            </div>
+                            <!-- End Header -->
+
+                            <div class="mb-3">
+                                <!-- Progress -->
+                                <div class="flex items-center gap-x-3 whitespace-nowrap">
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">5 star</span>
+                                    </div>
+                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 78%"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">78%</span>
+                                    </div>
+                                    </div>
+                                    <!-- End Progress -->
+
+                                    <!-- Progress -->
+                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">4 star</span>
+                                    </div>
+                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 20%"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">20%</span>
+                                    </div>
+                                    </div>
+                                    <!-- End Progress -->
+
+                                    <!-- Progress -->
+                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">3 star</span>
+                                    </div>
+                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 6%"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">6%</span>
+                                    </div>
+                                    </div>
+                                    <!-- End Progress -->
+
+                                    <!-- Progress -->
+                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">2 star</span>
+                                    </div>
+                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 2%"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">2%</span>
+                                    </div>
+                                    </div>
+                                    <!-- End Progress -->
+
+                                    <!-- Progress -->
+                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">1 star</span>
+                                    </div>
+                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 0%"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white">0%</span>
+                                    </div>
+                                    </div>
+                                    <!-- End Progress -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
-            </div>
             <!-- End Sidebar -->
         </div>
     </div>

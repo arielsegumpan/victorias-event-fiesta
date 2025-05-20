@@ -26,42 +26,35 @@
                     </h3>
 
                     <!-- Rating -->
-                    <div class="mt-2 flex justify-center items-center">
-
-                        <button type="button" class="size-10 inline-flex justify-center items-center text-2xl rounded-full hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        😠
-                        </button>
-
-                        <button type="button" class="size-10 inline-flex justify-center items-center text-2xl rounded-full hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        😔
-                        </button>
-
-                        <button type="button" class="size-10 inline-flex justify-center items-center text-2xl rounded-full hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        😐️
-                        </button>
-
-                        <button type="button" class="size-10 inline-flex justify-center items-center text-2xl rounded-full hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        😁
-                        </button>
-
-                        <button type="button" class="size-10 inline-flex justify-center items-center text-2xl rounded-full hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        🤩
-                        </button>
-
+                    <div class="mt-2 flex justify-center items-center space-x-2">
+                        @foreach ([1 => '😠', 2 => '😔', 3 => '😐️', 4 => '😁', 5 => '🤩'] as $rate => $emoji)
+                            <button
+                                type="button"
+                                wire:click="$set('rating', {{ $rate }})"
+                                class="size-10 inline-flex justify-center items-center text-2xl rounded-full transition
+                                    {{ $rating === $rate ? 'bg-orange-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-neutral-700' }}">
+                                {{ $emoji }}
+                            </button>
+                        @endforeach
                     </div>
+
+                    @error('rating')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                     <!-- End Rating -->
+
                 </div>
                 <!-- End Rate review -->
             </div>
 
-            <!-- Comment -->
+            <!-- Review -->
             <div>
                 <label class="block mb-2 text-sm font-medium dark:text-white">Comment</label>
-                <textarea wire:model.blur="comment"
+                <textarea wire:model.blur="review"
                         rows="5"
                         class="block w-full px-4 py-3 text-sm border-1  rounded-lg focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-400 dark:text-neutral-400 border-neutral-800"
-                        placeholder="Leave your comment here..."></textarea>
-                @error('comment') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        placeholder="Leave your review comment here..."></textarea>
+                @error('review') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <!-- Dropzone Alpine Component -->
@@ -90,23 +83,28 @@
                     x-on:drop="dragging = false"
                     x-on:click="$refs.fileInput.click()"
                 >
-                    <input type="file" wire:model="comment_imgs" multiple accept="image/*"
+                    <input type="file" wire:model="review_images" multiple accept="image/*"
                         class="hidden" x-ref="fileInput" @change="$refs.fileInput.dispatchEvent(new Event('input', { bubbles: true }))">
                     <p class="text-sm text-gray-600 dark:text-neutral-400">
-                        Drag & drop images or click to upload
+                        {{ __('Drag & drop images or click to upload') }}
                     </p>
                 </div>
 
                 <!-- Previews -->
                 <div class="flex flex-wrap gap-2 mt-4">
-                    @foreach($comment_imgs as $index => $img)
+                    @foreach($review_images as $index => $img)
                         <div class="relative group w-20 h-20">
                             <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover border dark:border-gray-200 border-gray-400 rounded">
                             <!-- Close Icon -->
                             <button type="button"
                                 class="absolute top-0 right-0 bg-black bg-opacity-50 text-white text-xs rounded-bl px-1 py-0.5 hidden group-hover:block"
                                 x-on:click.prevent="remove({{ $index }})">
-                                ✖
+
+                                <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+
                             </button>
                         </div>
                     @endforeach
@@ -118,24 +116,23 @@
                         <div class="bg-orange-600 h-2 rounded-full transition-all duration-200"
                             :style="`width: ${progress}%`"></div>
                     </div>
-                    <p class="text-xs mt-1 text-orange-600">Uploading... <span x-text="progress"></span>%</p>
+                    <p class="text-xs mt-1 text-orange-600">{{ __('Uploading...') }} <span x-text="progress"></span>{{ __('%') }}</p>
                 </div>
 
                 <!-- Error Message -->
-                @error('comment_imgs.*')
+                @error('review_images.*')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
 
             <!-- Submit -->
-            <button type="submit"
-                    class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg">
+            <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg">
 
                     <svg class="shrink-0 size-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                     </svg>
 
-                    {{ __('Submit Comment') }}
+                    {{ __('Submit Review') }}
             </button>
         </form>
         @else
@@ -149,7 +146,7 @@
 
 
                 <div class="text-gray-800 dark:text-neutral-400">
-                    Please <a class="mx-4 font-medium text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline dark:text-orange-500" href="{{ route('filament.auth.auth.login') }}">login</a> to comment
+                    {{ __('Please') }} <a class="mx-4 font-medium text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline dark:text-orange-500" href="{{ route('filament.auth.auth.login') }}">{{ __('login') }}</a> {{ __('to write a review') }}
                 </div>
             </div>
         </p>
@@ -159,15 +156,15 @@
       <!-- End Card -->
 
       <div class="mt-5 lg:mt-7 comments-section">
-        <h4 class="my-4 text-xl font-bold text-neutral-900 dark:text-white">Comments ({{ $comments->count() }})</h4>
+        <h4 class="my-4 text-xl font-bold text-neutral-900 dark:text-white">Review/s ({{ $reviews->count() }})</h4>
 
-        @forelse($comments as $comment)
+        @forelse($reviews as $review)
         <div class="mb-4 comment">
-            <strong class="text-gray-900 dark:text-white">{{ $comment->user->name }}</strong>
-            <p class="mb-3 ml-5 text-gray-800 lg:ml-8 dark:text-neutral-400">{{ $comment->comment }}</p>
+            <strong class="text-gray-900 dark:text-white">{{ $review->user->name }}</strong>
+            <p class="mb-3 ml-5 text-gray-800 lg:ml-8 dark:text-neutral-400">{{ $review->comment }}</p>
 
            <div class="flex flex-row flex-wrap gap-2 ml-5 lg:ml-8">
-                @foreach (json_decode($comment->comment_imgs, true) as $image)
+                @foreach (json_decode($review->review_images, true) as $image)
                     <img src="{{ asset('storage/' . $image) }}" alt="Comment Image"
                         class="w-20 h-20 object-cover border rounded">
                 @endforeach
@@ -181,14 +178,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    {{ $comment->created_at->diffForHumans() }}
+                    {{ $review->created_at->diffForHumans() }}
                 </div>
             </small>
 
             <hr class="my-4">
         </div>
         @empty
-            <p class="text-gray-800 dark:text-neutral-400">{{ __('No comments yet') }}</p>
+            <p class="text-gray-800 dark:text-neutral-400">{{ __('No reviews yet') }}</p>
         @endforelse
 
 
