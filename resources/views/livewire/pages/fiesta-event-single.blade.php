@@ -246,77 +246,28 @@
                             <!-- End Header -->
 
                             <div class="mb-3">
-                                <!-- Progress -->
-                                <div class="flex items-center gap-x-3 whitespace-nowrap">
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">5 star</span>
+                                @foreach ([5 => '🤩', 4 => '😁', 3 => '😐️', 2 => '😔', 1 => '😠'] as $star => $emoji)
+                                    <div wire:key="star-{{ $star }}" class="flex items-center gap-x-3 whitespace-nowrap mb-1">
+                                        <div class="w-14 text-end">
+                                            <span class="text-sm text-gray-800 dark:text-white">{{ $emoji }} {{ $star }} star</span>
+                                        </div>
+                                        <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700"
+                                            role="progressbar"
+                                            aria-valuenow="{{ $ratingStats[$star]['percentage'] ?? 0 }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100">
+                                            <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600"
+                                                style="width: {{ $ratingStats[$star]['percentage'] ?? 0 }}%"></div>
+                                        </div>
+                                        <div class="w-14 text-end">
+                                            <span class="text-sm text-gray-800 dark:text-white">
+                                                {{ $ratingStats[$star]['percentage'] ?? 0 }}%
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 78%"></div>
-                                    </div>
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">78%</span>
-                                    </div>
-                                    </div>
-                                    <!-- End Progress -->
-
-                                    <!-- Progress -->
-                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">4 star</span>
-                                    </div>
-                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 20%"></div>
-                                    </div>
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">20%</span>
-                                    </div>
-                                    </div>
-                                    <!-- End Progress -->
-
-                                    <!-- Progress -->
-                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">3 star</span>
-                                    </div>
-                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 6%"></div>
-                                    </div>
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">6%</span>
-                                    </div>
-                                    </div>
-                                    <!-- End Progress -->
-
-                                    <!-- Progress -->
-                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">2 star</span>
-                                    </div>
-                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 2%"></div>
-                                    </div>
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">2%</span>
-                                    </div>
-                                    </div>
-                                    <!-- End Progress -->
-
-                                    <!-- Progress -->
-                                    <div class="flex items-center gap-x-3 whitespace-nowrap">
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">1 star</span>
-                                    </div>
-                                    <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600" style="width: 0%"></div>
-                                    </div>
-                                    <div class="w-10 text-end">
-                                        <span class="text-sm text-gray-800 dark:text-white">0%</span>
-                                    </div>
-                                    </div>
-                                    <!-- End Progress -->
-                                </div>
+                                @endforeach
                             </div>
+
                         </div>
                     </div>
 

@@ -161,11 +161,11 @@
         @forelse($reviews as $review)
         <div class="mb-4 comment">
             <strong class="text-gray-900 dark:text-white">{{ $review->user->name }}</strong>
-            <p class="mb-3 ml-5 text-gray-800 lg:ml-8 dark:text-neutral-400">{{ $review->comment }}</p>
+            <p class="mb-3 ml-5 text-gray-800 lg:ml-8 dark:text-neutral-400">{{ $review->review }}</p>
 
            <div class="flex flex-row flex-wrap gap-2 ml-5 lg:ml-8">
                 @foreach (json_decode($review->review_images, true) as $image)
-                    <img src="{{ asset('storage/' . $image) }}" alt="Comment Image"
+                    <img src="{{ asset('storage/' . $image) }}" alt="Review Image"
                         class="w-20 h-20 object-cover border rounded">
                 @endforeach
             </div>
@@ -182,7 +182,7 @@
                 </div>
             </small>
 
-            <hr class="my-4">
+            <hr class="my-4 border-gray-500 dark:border-neutral-500">
         </div>
         @empty
             <p class="text-gray-800 dark:text-neutral-400">{{ __('No reviews yet') }}</p>
