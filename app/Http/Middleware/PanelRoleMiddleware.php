@@ -28,31 +28,22 @@ class PanelRoleMiddleware
         // Define panel-to-role mapping
         $panelRoles = [
             'admin' => 'super_admin',
-            'fiesta' => 'barangay captain',
-            'fiesta' => 'barangay_captain',
+            'fiesta' => ['barangay captain', 'barangay_captain'],
         ];
 
-        $requiredRole = $panelRoles[$currentPanelId] ?? null;
+        $requiredRoles = $panelRoles[$currentPanelId] ?? [];
 
-        // If no role is mapped for this panel or user doesn't have the role
-        if (!$requiredRole || !$user->hasRole($requiredRole)) {
-
-            session()->regenerateToken();
-            
-            // Redirect based on user role
+        if (!$user->hasAnyRole($requiredRoles)) {
             if ($user->hasRole('super_admin')) {
-                return redirect()->route('filament.admin.pages.dashboard');
+                return redirect()->to(Filament::getPanel('admin')->getUrl());
             }
 
-            if ($user->hasRole('fiesta')) {
-                return redirect()->route('filament.fiesta.pages.dashboard');
+            if ($user->hasAnyRole(['barangay captain', 'barangay_captain'])) {
+                return redirect()->to(Filament::getPanel('fiesta')->getUrl());
             }
 
-            // Fallback if role doesn't match any panel
             return redirect()->route('filament.auth.auth.login');
         }
-
-        // User has the correct role for the current panel
         return $next($request);
 
     }

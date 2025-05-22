@@ -22,6 +22,5 @@ class LoginResponse extends BaseLogin
     public function toResponse($request): RedirectResponse | Redirector
     {
         return redirect()->to(Auth::user()->usersPanel());
-
     }
 }

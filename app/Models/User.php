@@ -57,30 +57,24 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Get the user and their roles for debugging
         $user = Auth::user();
-        $roles = $user ? $user->getRoleNames()->toArray() : [];
         $panelId = $panel->getId();
 
-        if ($panelId === 'admin' || 'auth' && $user && $user->hasRole('super_admin')) {
-            return true;
-        }
-
-        if ($panelId === 'fiesta' || 'auth' && $user && $user->hasAnyRole(['barangay captain','barangay_captain'])) {
-            return true;
-        }
-
-        return false;
+        return match ($panelId) {
+            'admin' => $user && $user->hasRole('super_admin'),
+            'fiesta' => $user && $user->hasAnyRole(['barangay_captain', 'barangay captain']),
+            default => true, // allow 'auth' or fallback
+        };
     }
 
     public function usersPanel(): string
     {
-        $role = $this->getRoleNames()->first(); // uses Spatie's HasRoles trait
+        $role = $this->getRoleNames()->first();
+
         return match ($role) {
-            'super_admin' => url(Filament::getPanel('admin')->getPath()),
-            'barangay captain' => url(Filament::getPanel('fiesta')->getPath()),
-            'barangay_captain' => url(Filament::getPanel('fiesta')->getPath()),
-            default => '/', // fallback URL
+            'super_admin' => Filament::getPanel('admin')->getUrl(),
+            'barangay captain', 'barangay_captain' => Filament::getPanel('fiesta')->getUrl(),
+            default => Filament::getPanel('auth')->getUrl(),
         };
     }
 

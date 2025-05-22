@@ -68,7 +68,7 @@ class FiestaReview extends Component
             'is_approved' => 0,
         ]);
 
-        $this->reset();
+        $this->reset(['rating', 'review', 'review_images']);
 
         $this->dispatch('review-added');
     }
