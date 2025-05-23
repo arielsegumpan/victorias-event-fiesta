@@ -12,6 +12,7 @@ use App\Http\Middleware\PanelRoleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
+use App\Filament\Admin\Widgets\FiestaCalendarWidget;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Orange,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->spa()
+            // ->spa()
             ->font('Poppins')
             ->brandLogo(asset('imgs/vfs.png'))
             ->brandLogoHeight('3rem')
@@ -43,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
+                FiestaCalendarWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-            ]);
+            ])
+            ->viteTheme('resources/css/filament/admin/theme.css', 'build/filament');
     }
 }

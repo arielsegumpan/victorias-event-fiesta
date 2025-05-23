@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use DateTime;
+use Guava\Calendar\Contracts\Eventable;
 use Illuminate\Database\Eloquent\Model;
+use Guava\Calendar\ValueObjects\CalendarEvent;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Fiesta extends Model
+class Fiesta extends Model implements Eventable
 {
     protected $fillable = [
         'barangay_id',
@@ -26,8 +30,6 @@ class Fiesta extends Model
     protected $casts = [
         'f_images' => 'array',
         'f_location' => 'array',
-        'f_start_date' => 'datetime',
-        'f_end_date' => 'datetime',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'is_approved' => 'boolean',
@@ -63,5 +65,17 @@ class Fiesta extends Model
     public function reviews() : HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function toCalendarEvent(): CalendarEvent|array {
+
+        return CalendarEvent::make($this)
+            ->title($this->f_name)
+            ->start(Carbon::parse($this->f_start_date)->timezone('Asia/Manila')->toIso8601String())
+            ->end(Carbon::parse($this->f_end_date)->timezone('Asia/Manila')->toIso8601String())
+            ->styles([
+                'background-color' => '#ff9800',
+                'font-size: 12px'
+            ]);
     }
 }

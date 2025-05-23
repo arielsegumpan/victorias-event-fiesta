@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Split;
@@ -138,6 +139,7 @@ class FiestaResource extends Resource
                             ]),
                         ])
                         ->columnSpanFull()
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::title($record->cat_name))
 
                     ])
                     ->columns([
@@ -195,23 +197,26 @@ class FiestaResource extends Resource
                         ->label('Start Date')
                         ->seconds(false)
                         ->required()
-                        ->format('F j, Y, g:i a')
+                        ->displayFormat('F j, Y, g:i A')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
-                        ->maxDate(now())
-                        ->columnSpanFull(),
+                        ->maxDate(now()->addYear())
+                        ->minDate(now())
+                        ->columnSpanFull()
+                        ->timezone(config('app.timezone')),
 
                         DateTimePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
                         ->seconds(false)
-                        ->format('F j, Y, g:i a')
+                        ->displayFormat('F j, Y, g:i A')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
                         ->minDate(now())
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->timezone(config('app.timezone')),
 
                         ToggleButtons::make('is_featured')
                         ->label('Is Featured?')

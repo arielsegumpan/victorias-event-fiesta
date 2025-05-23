@@ -29,7 +29,8 @@ class FiestaPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Orange,
             ])
-            ->sidebarCollapsibleOnDesktop()
+            // ->sidebarCollapsibleOnDesktop()
+             ->topNavigation()
             ->spa()
             ->font('Poppins')
             ->brandLogo(asset('imgs/vfs.png'))

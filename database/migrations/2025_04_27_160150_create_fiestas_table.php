@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('f_slug')->unique()->index();
             $table->json('f_images')->nullable();
             $table->longText('f_description')->nullable();
-            $table->dateTime('f_start_date')->nullable();
-            $table->dateTime('f_end_date')->nullable();
+            $table->timestamp('f_start_date')->nullable();
+            $table->timestamp('f_end_date')->nullable();
             $table->boolean('is_featured')->default(0);
             $table->boolean('is_published')->default(1);
             $table->timestamps();
