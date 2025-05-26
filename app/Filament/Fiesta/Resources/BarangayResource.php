@@ -37,67 +37,30 @@ class BarangayResource extends Resource
 
                 Section::make()
                 ->schema([
-
-                    TextInput::make('brgy_name')
-                    ->label('Barangay')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('brgy_slug', Str::slug($state))),
-
-                    TextInput::make('brgy_slug')
-                    ->label('Slug')
-                    ->disabled()
-                    ->dehydrated()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true),
-
                     Group::make([
-                        ToggleButtons::make('is_published')
-                        ->label('Is Publish?')
-                        ->inline()
+                        TextInput::make('brgy_name')
+                        ->label('Barangay')
                         ->required()
-                        ->options([
-                            '1' => 'Yes',
-                            '0' => 'No',
-                        ])
-                        ->icons([
-                            '1' => 'heroicon-o-check-circle',
-                            '0' => 'heroicon-o-x-circle',
-                        ])
-                        ->colors([
-                            '1' => 'primary',
-                            '0' => 'danger',
-                        ])
-                        ->dehydrated()
-                        ->default('1'),
+                        ->maxLength(255)
+                        ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true)
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(fn (Set $set, ?string $state) => $set('brgy_slug', Str::slug($state))),
 
-                        ToggleButtons::make('is_featured')
-                        ->label('Is Featured?')
-                        ->inline()
-                        ->required()
-                        ->options([
-                            '1' => 'Yes',
-                            '0' => 'No',
-                        ])
-                        ->icons([
-                            '1' => 'heroicon-o-check-circle',
-                            '0' => 'heroicon-o-x-circle',
-                        ])
-                        ->colors([
-                            '1' => 'primary',
-                            '0' => 'danger',
-                        ])
+                        TextInput::make('brgy_slug')
+                        ->label('Slug')
+                        ->disabled()
                         ->dehydrated()
-                        ->default('1'),
+                        ->required()
+                        ->maxLength(255)
+                        ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true),
                     ])
                     ->columns([
                         'sm' => 1,
                         'md' => 2,
-                        'lg' => 2,
+                        'lg' => 2
                     ]),
+
+
 
                     RichEditor::make('brgy_desc')
                     ->label('Description')

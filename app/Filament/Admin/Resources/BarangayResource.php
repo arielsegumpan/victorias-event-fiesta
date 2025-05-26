@@ -298,7 +298,7 @@ class BarangayResource extends Resource
                             ImageEntry::make('brgy_logo')
                             ->hiddenlabel()
                             ->size(150)
-                            ->circular()
+                            ->square()
                             ->placeholder('No Image')
                             ->extraImgAttributes([
                                 'alt' => 'Logo',
@@ -309,7 +309,7 @@ class BarangayResource extends Resource
                             ->hiddenlabel()
                             ->height(50)
                             ->stacked()
-                            ->circular()
+                            ->square()
                             ->overlap(1)
                             ->limit(3)
                             ->limitedRemainingText()

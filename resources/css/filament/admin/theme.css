@@ -1,3 +1,70 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
 @config 'tailwind.config.js';
+
+
+
+.fi-body{
+    @apply transition-all duration-300 bg-gray-50 dark:bg-neutral-900;
+}
+
+.fi-topbar{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700;
+}
+
+nav.flex{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700;
+}
+
+
+.fi-sidebar-nav{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700;
+}
+
+
+.fi-sidebar-header{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700;
+}
+
+.fi-main, .fi-modal-window, .fi-simple-main, .fi-fo-tabs-tab{
+    @apply bg-gray-50 dark:bg-neutral-900;
+}
+
+.fi-section, .choices__list.choices__list--dropdown{
+     @apply bg-gray-100 rounded-none dark:bg-neutral-800;
+}
+
+.fi-sidebar-item-button, .fi-btn, .fi-avatar, .fi-dropdown-list-item, .fi-theme-switcher-btn, .fi-checkbox-input, .fi-input-wrp, .choices__list, .fi-simple-main, .fi-tabs, .fi-tabs-item, .fi-no-notification, .fi-fieldset, .fi-badge, .fi-modal-window, .fi-fo-toggle, .fi-fo-toggle span, .choices__list.choices__list--dropdown, .choices__item.choices__item--choice{
+    @apply rounded-none;
+}
+
+.fi-avatar{
+    @apply w-10 h-10;
+}
+
+.fi-ta-ctn{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700 rounded-none;
+}
+
+.fi-dropdown-panel{
+    @apply bg-[#f4f4f4] dark:bg-neutral-800 border-e border-gray-200 dark:border-neutral-700 rounded-none;
+}
+
+
+.fi-header-heading{
+    @apply text-gray-700 dark:text-neutral-200;
+}
+
+.fi-ta-header-cell-label{
+    @apply text-sm font-medium text-gray-500 uppercase text-start dark:text-neutral-500;
+}
+
+
+.filepond--file, .filepond--root.filepond--hopper{
+    border-radius: 0 !important;
+}
+
+.filepond--image-preview-wrapper {
+    border-radius: 0 !important;
+}
+

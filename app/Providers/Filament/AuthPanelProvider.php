@@ -61,6 +61,7 @@ class AuthPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 PanelRoleMiddleware::class,
-            ]);
+            ])
+            ->viteTheme('resources/css/filament/admin/theme.css', 'build/filament');
     }
 }

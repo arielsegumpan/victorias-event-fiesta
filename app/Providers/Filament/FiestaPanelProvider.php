@@ -63,5 +63,6 @@ class FiestaPanelProvider extends PanelProvider
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ]);
+            // ->viteTheme('resources/css/filament/fiesta/theme.css', 'build/filament');
     }
 }

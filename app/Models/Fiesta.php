@@ -55,7 +55,6 @@ class Fiesta extends Model implements Eventable
         return $this->belongsTo(Barangay::class, 'barangay_id');
     }
 
-
     public function comments() : HasMany
     {
         return $this->hasMany(Comments::class);
