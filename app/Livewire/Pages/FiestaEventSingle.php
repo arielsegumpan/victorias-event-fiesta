@@ -12,7 +12,13 @@ class FiestaEventSingle extends Component
     public array $ratingStats = [];
     public function mount($f_slug)
     {
-        $this->fiesta = Fiesta::with(['category', 'user', 'barangay'])->where('f_slug', $f_slug)->firstOrFail();
+        $this->fiesta = Fiesta::with([
+            'category',
+            'user',
+            'barangay' => function ($query) {
+                $query->where('is_published', true);
+            }
+            ])->where('f_slug', $f_slug)->firstOrFail();
 
         $this->relatedFiesta = Fiesta::where('created_by', $this->fiesta->user_id)
             ->where('id', '!=', $this->fiesta->id)

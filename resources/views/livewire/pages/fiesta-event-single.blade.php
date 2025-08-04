@@ -283,71 +283,86 @@
                     </div>
                     @endif
 
-
-
-
                     <div class="lg:mt-8 ">
-                        <h1 class="mb-5 text-lg font-bold lg:mb-8 lg:text-3xl dark:text-white">{{ __('Event Reviews') }}</h1>
-                                <!-- Header -->
-                        <div class="flex items-center justify-between mb-3 gap-x-3">
-                            <div class="flex items-center gap-x-2">
-                                <h4 class="font-semibold text-gray-800 dark:text-white">
-                                            5.0
-                                </h4>
+                        <div>
+                            <h1 class="mb-5 text-lg font-bold lg:mb-8 lg:text-3xl dark:text-white">{{ __('Event Reviews') }}</h1>
+                                    <!-- Header -->
+                            <div class="flex items-center justify-between mb-3 gap-x-3">
+                                <div class="flex items-center gap-x-2">
+                                    <h4 class="font-semibold text-gray-800 dark:text-white">
+                                                5.0
+                                    </h4>
 
-                                <!-- Rating -->
-                                <div class="flex">
-                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>
-                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>
-                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>
-                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>
-                                    <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                    </svg>
-                                </div>
-                                <!-- End Rating -->
-                                </div>
-
-                                <a class="inline-flex items-center text-xs font-medium text-orange-600 gap-x-1 decoration-2 hover:underline" href="#">
-                                    See all (4)
-                                </a>
-                            </div>
-                            <!-- End Header -->
-
-                            <div class="mb-3">
-                                @foreach ([5 => '🤩', 4 => '😁', 3 => '😐️', 2 => '😔', 1 => '😠'] as $star => $emoji)
-                                    <div wire:key="star-{{ $star }}" class="flex items-center mb-1 gap-x-3 whitespace-nowrap">
-                                        <div class="w-14 text-end">
-                                            <span class="text-sm text-gray-800 dark:text-white">{{ $emoji }} {{ $star }} star</span>
-                                        </div>
-                                        <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700"
-                                            role="progressbar"
-                                            aria-valuenow="{{ $ratingStats[$star]['percentage'] ?? 0 }}"
-                                            aria-valuemin="0"
-                                            aria-valuemax="100">
-                                            <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600"
-                                                style="width: {{ $ratingStats[$star]['percentage'] ?? 0 }}%"></div>
-                                        </div>
-                                        <div class="w-14 text-end">
-                                            <span class="text-sm text-gray-800 dark:text-white">
-                                                {{ $ratingStats[$star]['percentage'] ?? 0 }}%
-                                            </span>
-                                        </div>
+                                    <!-- Rating -->
+                                    <div class="flex">
+                                        <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>
+                                        <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>
+                                        <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>
+                                        <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>
+                                        <svg class="text-orange-400 shrink-0 size-4 dark:text-orange-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                        </svg>
                                     </div>
-                                @endforeach
+                                    <!-- End Rating -->
+                                    </div>
+
+                                    <a class="inline-flex items-center text-xs font-medium text-orange-600 gap-x-1 decoration-2 hover:underline" href="#">
+                                        See all (4)
+                                    </a>
+                                </div>
+                                <!-- End Header -->
+
+                                <div class="mb-3">
+                                    @foreach ([5 => '🤩', 4 => '😁', 3 => '😐️', 2 => '😔', 1 => '😠'] as $star => $emoji)
+                                        <div wire:key="star-{{ $star }}" class="flex items-center mb-1 gap-x-3 whitespace-nowrap">
+                                            <div class="w-14 text-end">
+                                                <span class="text-sm text-gray-800 dark:text-white">{{ $emoji }} {{ $star }} star</span>
+                                            </div>
+                                            <div class="flex w-full h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-neutral-700"
+                                                role="progressbar"
+                                                aria-valuenow="{{ $ratingStats[$star]['percentage'] ?? 0 }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                                <div class="flex flex-col justify-center overflow-hidden text-xs text-center text-white transition duration-500 bg-orange-400 rounded-full whitespace-nowrap dark:bg-orange-600"
+                                                    style="width: {{ $ratingStats[$star]['percentage'] ?? 0 }}%"></div>
+                                            </div>
+                                            <div class="w-14 text-end">
+                                                <span class="text-sm text-gray-800 dark:text-white">
+                                                    {{ $ratingStats[$star]['percentage'] ?? 0 }}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
                             </div>
-
                         </div>
-                    </div>
 
+                        {{-- @dd($fiesta->barangay) --}}
+
+                        @if(!@empty($fiesta->barangay))
+                        <div class="lg:mt-8 ">
+                            <h1 class="mb-5 text-lg font-bold lg:mb-8 lg:text-3xl dark:text-white">{{ __('Event Host') }}</h1>
+                            <div class="space-y-6">
+                                <div class="flex flex-col items-center align-middle md:justify-start md:flex-row s-center gap-x-3">
+                                    <img src="{{ asset(Storage::url($fiesta->barangay->brgy_logo)) }}" alt="{{ $fiesta->barangay->brgy_name }}" class="object-cover w-16 h-16 rounded-full grow-0">
+                                    <h2 class="text-2xl font-bold text-neutral-800 dark:text-white">{{ $fiesta->barangay->brgy_name }}</h2>
+                                </div>
+                                <div class="text-gray-600 dark:text-neutral-200">
+                                    <p class="mb-2">{{ __('Barangay Description') }}: {{ $fiesta->barangay->brgy_description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                         @endif
+                    </div>
 
                 </div>
             <!-- End Sidebar -->
