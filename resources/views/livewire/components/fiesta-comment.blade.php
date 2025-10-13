@@ -8,7 +8,7 @@
       </div>
 
       <!-- Card -->
-      <div class="relative z-10 p-4 mt-5 bg-white border rounded-none sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+      <div class="relative z-10 p-4 mt-5 bg-white border rounded-md sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
         @if(auth()->check())
         <form wire:submit.prevent="submitReview"
             x-data="dropzoneHandler()"
@@ -28,23 +28,23 @@
                     <!-- Rating -->
                     <div class="flex items-center justify-center mt-2">
 
-                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-none size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-md size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                         😠
                         </button>
 
-                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-none size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-md size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                         😔
                         </button>
 
-                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-none size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-md size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                         😐️
                         </button>
 
-                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-none size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-md size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                         😁
                         </button>
 
-                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-none size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                        <button type="button" class="inline-flex items-center justify-center text-2xl rounded-md size-10 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                         🤩
                         </button>
 
@@ -59,7 +59,7 @@
                 <label class="block mb-2 text-sm font-medium dark:text-white">Comment</label>
                 <textarea wire:model.blur="comment"
                         rows="5"
-                        class="block w-full px-4 py-3 text-sm rounded-none border-1 focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-400 dark:text-neutral-400 border-neutral-800"
+                        class="block w-full px-4 py-3 text-sm rounded-md border-1 focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-400 dark:text-neutral-400 border-neutral-800"
                         placeholder="Leave your comment here..."></textarea>
                 @error('comment') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
             </div>
@@ -82,7 +82,7 @@
 
                 <!-- Dropzone -->
                 <div
-                    class="w-full p-6 text-center transition bg-white border-2 border-dashed rounded-none cursor-pointer border-neutral-800 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 dark:bg-neutral-800"
+                    class="w-full p-6 text-center transition bg-white border-2 border-dashed rounded-md cursor-pointer border-neutral-800 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 dark:bg-neutral-800"
                     :class="{ 'border-orange-500': dragging }"
                     x-ref="dropzone"
                     x-on:dragenter="dragging = true"
@@ -104,7 +104,7 @@
                             <img src="{{ $img->temporaryUrl() }}" class="object-cover w-full h-full border border-gray-400 rounded dark:border-gray-200">
                             <!-- Close Icon -->
                             <button type="button"
-                                class="absolute top-0 right-0 bg-black bg-opacity-50 text-white text-xs rounded-none px-1 py-0.5 hidden group-hover:block"
+                                class="absolute top-0 right-0 bg-black bg-opacity-50 text-white text-xs rounded-md px-1 py-0.5 hidden group-hover:block"
                                 x-on:click.prevent="remove({{ $index }})">
                                 ✖
                             </button>
@@ -114,8 +114,8 @@
 
                 <!-- Upload Progress -->
                 <div x-show="isUploading" class="mt-2">
-                    <div class="w-full h-2 bg-gray-200 rounded-none dark:bg-gray-700">
-                        <div class="h-2 transition-all duration-200 bg-orange-600 rounded-none"
+                    <div class="w-full h-2 bg-gray-200 rounded-md dark:bg-gray-700">
+                        <div class="h-2 transition-all duration-200 bg-orange-600 rounded-md"
                             :style="`width: ${progress}%`"></div>
                     </div>
                     <p class="mt-1 text-xs text-orange-600">Uploading... <span x-text="progress"></span>%</p>
@@ -129,7 +129,7 @@
 
             <!-- Submit -->
             <button type="submit"
-                    class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 rounded-none hover:bg-orange-700">
+                    class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700">
 
                     <svg class="mr-2 shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />

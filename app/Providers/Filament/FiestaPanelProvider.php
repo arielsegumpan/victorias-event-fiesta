@@ -12,6 +12,7 @@ use App\Http\Middleware\PanelRoleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,13 +27,14 @@ class FiestaPanelProvider extends PanelProvider
         return $panel
             ->id('fiesta')
             ->path('fiesta')
-            ->colors([
+           ->colors([
                 'primary' => Color::Orange,
             ])
             // ->sidebarCollapsibleOnDesktop()
              ->topNavigation()
             ->spa()
-            ->font('Poppins')
+            ->font('Montserrat')
+            ->sidebarWidth('15rem')
             ->brandLogo(asset('imgs/vfs.png'))
             ->brandLogoHeight('3rem')
             ->favicon(asset('imgs/vfs.png'))
@@ -43,8 +45,8 @@ class FiestaPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Fiesta/Widgets'), for: 'App\\Filament\\Fiesta\\Widgets')
             ->widgets([
-                // Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
+                Widgets\AccountWidget::class,
+                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -61,8 +63,7 @@ class FiestaPanelProvider extends PanelProvider
                 PanelRoleMiddleware::class
             ])
             ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make(),
             ]);
-            // ->viteTheme('resources/css/filament/fiesta/theme.css', 'build/filament');
     }
 }

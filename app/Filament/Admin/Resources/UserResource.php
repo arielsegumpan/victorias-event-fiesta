@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Split;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
@@ -78,6 +79,13 @@ class UserResource extends Resource
                         ->revealable()
                         ->required(fn (Page $livewire): bool => $livewire instanceof Pages\EditUser)
                         ->visible(fn (Page $livewire): bool => $livewire instanceof Pages\CreateUser),
+
+                        // Checkbox::make('is_captain')
+                        // ->label('Is user is a barangay captain?')
+                        // ->visible(fn (Page $livewire): bool => $livewire instanceof Pages\CreateUser),
+
+                        // Select::make()
+                        // ->relationship('captainRoles', 'Barangay')
                     ])
                     ->columns(1),
 

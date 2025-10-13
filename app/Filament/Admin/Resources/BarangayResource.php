@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Fieldset;
@@ -128,57 +129,81 @@ class BarangayResource extends Resource
                     'lg' => 3,
                 ]),
 
-                Section::make()
-                ->schema([
-
-                    Fieldset::make('Barangay Logo')
+                Group::make([
+                    Section::make()
                     ->schema([
-                        FileUpload::make('brgy_logo')
-                        ->hiddenlabel()
-                        ->image()
-                        ->required()
-                        ->maxSize(1024)
-                        ->imageEditor()
-                        ->imageEditorAspectRatios([
-                            null,
-                            '16:9',
-                            '4:3',
-                            '1:1',
-                        ])
-                        ->columnSpanFull(),
+
+                        Fieldset::make('Barangay Logo')
+                        ->schema([
+                            FileUpload::make('brgy_logo')
+                            ->hiddenlabel()
+                            ->image()
+                            ->required()
+                            ->maxSize(1024)
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->columnSpanFull(),
+                        ]),
+
+                        Fieldset::make('Barangay Image Gallery')
+                        ->schema([
+                            FileUpload::make('brgy_img_gallery')
+                            ->hiddenlabel()
+                            ->multiple()
+                            ->image()
+                            ->maxSize('2048')
+                            ->maxParallelUploads(5)
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->columnSpanFull(),
+                        ]),
+
                     ]),
 
-                    Fieldset::make('Barangay Image Gallery')
+                    Section::make()
                     ->schema([
-                        FileUpload::make('brgy_img_gallery')
-                        ->hiddenlabel()
-                        ->multiple()
-                        ->image()
-                        ->maxSize('2048')
-                        ->maxParallelUploads(5)
-                        ->imageEditor()
-                        ->imageEditorAspectRatios([
-                            null,
-                            '16:9',
-                            '4:3',
-                            '1:1',
-                        ])
-                        ->columnSpanFull(),
+                        Select::make('barangay_captain_id')
+                        ->label('Assign Barangay Captain')
+                        ->options(function () {
+                            return \App\Models\User::whereHas('roles', function ($query) {
+                                $query->whereIn('name', [
+                                    'barangay captain',
+                                    'barangay_captain',
+                                    'brgy captain',
+                                    'brgy_captain',
+                                    'captain',
+                                ]);
+                            })
+                            ->pluck('name', 'id');
+                        })
+                        ->searchable()
+                        ->preload()
+                        ->native(false)
+                        ->hint('Only users with Barangay Captain role are shown.')
                     ])
                 ])
                 ->columnSpan([
                     'sm' => 1,
                     'md' => 2,
                     'lg' => 2,
-                ])
-
+                ]),
 
             ])
             ->columns([
                 'sm' => 1,
                 'md' => 5,
                 'lg' => 5,
-        ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -209,6 +234,12 @@ class BarangayResource extends Resource
                     ->badge()
                     ->color('primary')
                     ->description(fn (Barangay $record) => $record->brgy_slug),
+
+                TextColumn::make('currentCaptain.user.name')
+                    ->label('Current Barangay Captain')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('No active captain'),
 
                 IconColumn::make('is_published')
                     ->icon(fn (string $state): string => match ($state) {

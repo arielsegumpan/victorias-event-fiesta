@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Barangay extends Model
 {
@@ -22,11 +24,23 @@ class Barangay extends Model
     ];
     public function fiestas() : HasMany
     {
-        return $this->hasMany(Fiesta::class);
+        return $this->hasMany(Fiesta::class, 'barangay_id');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function barangayCaptains() : HasMany
     {
-        return $this->hasMany(BarangayCaptain::class);
+        return $this->hasMany(BarangayCaptain::class, 'barangay_id');
+    }
+
+    public function currentCaptain() : HasOne
+    {
+        return $this->hasOne(BarangayCaptain::class, 'barangay_id')
+                    ->whereNull('term_end')
+                    ->orWhere('term_end', '>=', now());
     }
 }

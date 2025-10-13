@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Filament\Facades\Filament;
-use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
 class PanelRoleMiddleware
@@ -28,7 +27,7 @@ class PanelRoleMiddleware
         // Define panel-to-role mapping
         $panelRoles = [
             'admin' => 'super_admin',
-            'fiesta' => ['barangay captain', 'barangay_captain'],
+            'fiesta' => ['barangay captain', 'barangay_captain' , 'brgy captain', 'brgy_captain', 'captain'],
         ];
 
         $requiredRoles = $panelRoles[$currentPanelId] ?? [];
@@ -38,13 +37,12 @@ class PanelRoleMiddleware
                 return redirect()->to(Filament::getPanel('admin')->getUrl());
             }
 
-            if ($user->hasAnyRole(['barangay captain', 'barangay_captain'])) {
+            if ($user->hasAnyRole(['barangay captain', 'barangay_captain' , 'brgy captain', 'brgy_captain', 'captain'])) {
                 return redirect()->to(Filament::getPanel('fiesta')->getUrl());
             }
 
             return redirect()->route('filament.auth.auth.login');
         }
         return $next($request);
-
     }
 }

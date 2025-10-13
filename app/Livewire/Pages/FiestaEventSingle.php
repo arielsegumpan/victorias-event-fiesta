@@ -4,54 +4,78 @@ namespace App\Livewire\Pages;
 
 use App\Models\Fiesta;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 
+#[Lazy]
 class FiestaEventSingle extends Component
 {
-    public $fiesta, $relatedFiesta;
-    public array $ratingStats = [];
+    public $fiestaId;
+    public $userId;
+
     public function mount($f_slug)
     {
-        $this->fiesta = Fiesta::with([
-            'category',
-            'user',
-            'barangay' => function ($query) {
-                $query->where('is_published', true);
-            }
-            ])->where('f_slug', $f_slug)->firstOrFail();
+        $fiesta = Fiesta::select('id', 'created_by')
+            ->where('f_slug', $f_slug)
+            ->firstOrFail();
+        $this->fiestaId = $fiesta->id;
+        $this->userId = $fiesta->user_id;
+    }
 
-        $this->relatedFiesta = Fiesta::where('created_by', $this->fiesta->user_id)
-            ->where('id', '!=', $this->fiesta->id)
+    #[Computed]
+    public function fiesta()
+    {
+        return Fiesta::with([
+            'category:id,cat_name',
+            'user:id,name,email',
+            'barangay' => fn($q) => $q->where('is_published', true)->select('id', 'brgy_name'),
+            'reviews:id,fiesta_id,rating'
+        ])
+        ->findOrFail($this->fiestaId);
+    }
+
+    #[Computed]
+    public function relatedFiesta()
+    {
+        return Fiesta::select('id', 'f_slug', 'f_name', 'created_at')
+            ->where('created_by', $this->userId)
+            ->where('id', '!=', $this->fiestaId)
             ->latest()
             ->take(5)
             ->get();
-
-        $this->computeRatingStats();
     }
 
-    protected function computeRatingStats()
+    #[Computed]
+    public function ratingStats()
     {
-        $total = $this->fiesta->reviews->count();
+        $reviews = $this->fiesta->reviews;
+        $total = $reviews->count();
 
-        $counts = $this->fiesta->reviews->groupBy('rating')->map->count();
-
-        // Prepare stats for ratings 5 to 1
-        foreach ([5, 4, 3, 2, 1] as $star) {
-            $count = $counts->get($star, 0);
-            $percentage = $total > 0 ? round(($count / $total) * 100) : 0;
-            $this->ratingStats[$star] = [
-                'count' => $count,
-                'percentage' => $percentage
-            ];
+        if ($total === 0) {
+            return collect([5, 4, 3, 2, 1])->mapWithKeys(fn($star) => [
+                $star => ['count' => 0, 'percentage' => 0]
+            ])->toArray();
         }
+
+        $counts = $reviews->countBy('rating');
+
+        return collect([5, 4, 3, 2, 1])->mapWithKeys(function($star) use ($counts, $total) {
+            $count = $counts->get($star, 0);
+            return [$star => [
+                'count' => $count,
+                'percentage' => round(($count / $total) * 100)
+            ]];
+        })->toArray();
     }
 
-    #[Layout('layouts.app')]
+    // public function placeholder()
+    // {
+    //     return view('livewire.placeholders.fiesta-loading');
+    // }
+
     public function render()
     {
-        return view('livewire.pages.fiesta-event-single',[
-            'fiesta' => $this->fiesta,
-            'relatedFiesta' => $this->relatedFiesta
-        ]);
+        return view('livewire.pages.fiesta-event-single');
     }
 }

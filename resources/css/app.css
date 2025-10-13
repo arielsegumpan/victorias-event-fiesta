@@ -1,6 +1,11 @@
-@import 'tailwindcss-v4';
+@import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* Preline UI */
+@import "../../node_modules/preline/variants.css";
+@source "../../node_modules/preline/dist/*.js";
+
+/* Plugins */
+@plugin "@tailwindcss/forms";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,14 +13,9 @@
 @source '../**/*.js';
 @source './vendor/guava/calendar/resources/**/*.blade.php';
 
-/* Preline UI */
-@import "../../node_modules/preline/variants.css";
-@source "../../node_modules/preline/dist/*.js";
-
-@import 'dropzone/dist/dropzone.css';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
@@ -29,3 +29,6 @@
 
 /* Defaults hover styles on all devices */
 @custom-variant hover (&:hover);
+
+
+@custom-variant dark (&:where(.dark, .dark *));

@@ -28,21 +28,22 @@ class AuthPanelProvider extends PanelProvider
             ->default()
             ->id('auth')
             ->path('auth')
+            ->login()
             ->colors([
                 'primary' => Color::Orange,
             ])
             ->login()
             ->registration(Register::class)
-            ->font('Poppins')
+            ->font('Montserrat')
             ->brandLogo(asset('imgs/vfs.png'))
             ->brandLogoHeight('3rem')
             ->favicon(asset('imgs/vfs.png'))
-            ->discoverResources(in: app_path('Filament/Auth/Resources'), for: 'App\\Filament\\Auth\\Resources')
-            ->discoverPages(in: app_path('Filament/Auth/Pages'), for: 'App\\Filament\\Auth\\Pages')
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Auth/Widgets'), for: 'App\\Filament\\Auth\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -60,8 +61,7 @@ class AuthPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                PanelRoleMiddleware::class,
-            ])
-            ->viteTheme('resources/css/filament/admin/theme.css', 'build/filament');
+                PanelRoleMiddleware::class
+            ]);
     }
 }

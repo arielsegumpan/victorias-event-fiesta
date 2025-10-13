@@ -283,7 +283,7 @@ class FiestaResource extends Resource
             ->emptyStateHeading('No fiestas are created')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
-                if ($user->hasRole('barangay_captain')) {
+                if ($user->hasAnyRole(['barangay captain', 'barangay_captain' , 'brgy captain', 'brgy_captain', 'captain'])) {
                     return $query->where('user_id', $user->id);
                 }
             })

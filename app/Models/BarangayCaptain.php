@@ -28,4 +28,13 @@ class BarangayCaptain extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Helper method to check if captain is currently active
+    public function isActive(): bool
+    {
+        $now = now();
+        return $this->term_start <= $now &&
+               ($this->term_end === null || $this->term_end >= $now);
+    }
+
+
 }

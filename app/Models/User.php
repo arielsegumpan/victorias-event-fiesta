@@ -62,7 +62,7 @@ class User extends Authenticatable implements FilamentUser
 
         return match ($panelId) {
             'admin' => $user && $user->hasRole('super_admin'),
-            'fiesta' => $user && $user->hasAnyRole(['barangay_captain', 'barangay captain']),
+            'fiesta' => $user && $user->hasAnyRole(['barangay captain', 'barangay_captain' , 'brgy captain', 'brgy_captain', 'captain']),
             default => true, // allow 'auth' or fallback
         };
     }
@@ -73,7 +73,11 @@ class User extends Authenticatable implements FilamentUser
 
         return match ($role) {
             'super_admin' => Filament::getPanel('admin')->getUrl(),
-            'barangay captain', 'barangay_captain' => Filament::getPanel('fiesta')->getUrl(),
+            'barangay captain' => Filament::getPanel('fiesta')->getUrl(),
+            'barangay_captain' => Filament::getPanel('fiesta')->getUrl(),
+            'brgy captain' => Filament::getPanel('fiesta')->getUrl(),
+            'brgy_captain' => Filament::getPanel('fiesta')->getUrl(),
+            'captain' => Filament::getPanel('fiesta')->getUrl(),
             default => Filament::getPanel('auth')->getUrl(),
         };
     }
@@ -92,4 +96,35 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Comments::class);
     }
+
+    public function captainRoles()
+    {
+        return $this->hasMany(BarangayCaptain::class);
+    }
+
+    public function currentBarangay()
+    {
+        return $this->hasOne(BarangayCaptain::class)
+                    ->whereNull('term_end')
+                    ->orWhere('term_end', '>=', now());
+    }
+
+
+    // Relationships
+    public function createdBarangays(): HasMany
+    {
+        return $this->hasMany(Barangay::class, 'created_by');
+    }
+
+    public function captainOf(): HasMany
+    {
+        return $this->hasMany(BarangayCaptain::class, 'user_id');
+    }
+
+    public function createdFiestas(): HasMany
+    {
+        return $this->hasMany(Fiesta::class, 'created_by');
+    }
+
+    
 }

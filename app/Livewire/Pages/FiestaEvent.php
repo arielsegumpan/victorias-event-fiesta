@@ -7,20 +7,19 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 
 class FiestaEvent extends Component
 {
     use WithPagination;
-    #[Layout('layouts.app')]
+    
     public function render()
     {
-        return view('livewire.pages.fiesta-event', [
-            'fiestas' => $this->getFiestas(),
-            'fiesta_top_content' => $this->getFiestaTopContent(),
-        ]);
+        return view('livewire.pages.fiesta-event');
     }
 
-    public function getFiestas()
+    #[Computed]
+    public function fiestas()
     {
         return Fiesta::with(['category', 'user', 'barangay'])
             ->where('is_published', 1)
@@ -33,7 +32,8 @@ class FiestaEvent extends Component
             });
     }
 
-    public function getFiestaTopContent()
+    #[Computed]
+    public function fiestaTopContent()
     {
         return Fiesta::with(['category', 'user', 'barangay'])
             ->where('is_published', 1)

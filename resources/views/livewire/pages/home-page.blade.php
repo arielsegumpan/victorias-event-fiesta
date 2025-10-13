@@ -2,7 +2,7 @@
     <!-- Features -->
     <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
         <div class="aspect-w-16 aspect-h-7">
-            <img class="w-full object-cover rounded-none h-[350px] xxl:h-[280px]" src="https://images.unsplash.com/photo-1624571409412-1f253e1ecc89?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80" alt="Features Image">
+            <img class="w-full object-cover rounded-md h-[350px] xxl:h-[280px]" src="https://images.unsplash.com/photo-1624571409412-1f253e1ecc89?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80" alt="Features Image">
         </div>
 
         <!-- Grid -->
@@ -136,22 +136,22 @@
     <!-- Grid -->
     <div class="grid items-center grid-cols-2 gap-2 mt-10 sm:mt-20 md:grid-cols-4 sm:gap-6 lg:gap-8">
         <div class="w-full h-32">
-        <img class="object-cover object-center rounded-none size-full" src="https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
+        <img class="object-cover object-center rounded-md size-full" src="https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
         </div>
         <!-- End Col -->
 
         <div class="w-full h-32">
-        <img class="object-cover object-center rounded-none size-full" src="https://images.unsplash.com/photo-1587613991119-fbbe8e90531d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
+        <img class="object-cover object-center rounded-md size-full" src="https://images.unsplash.com/photo-1587613991119-fbbe8e90531d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
         </div>
         <!-- End Col -->
 
         <div class="w-full h-32">
-        <img class="object-cover object-center rounded-none size-full" src="https://images.unsplash.com/photo-1554295405-abb8fd54f153?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
+        <img class="object-cover object-center rounded-md size-full" src="https://images.unsplash.com/photo-1554295405-abb8fd54f153?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
         </div>
         <!-- End Col -->
 
         <div class="w-full h-32">
-        <img class="object-cover object-center rounded-none size-full" src="https://images.unsplash.com/photo-1640622300473-977435c38c04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
+        <img class="object-cover object-center rounded-md size-full" src="https://images.unsplash.com/photo-1640622300473-977435c38c04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=920&q=80" alt="Features Image">
         </div>
         <!-- End Col -->
     </div>
@@ -171,12 +171,12 @@
         <!-- Grid -->
         <div class="grid gap-6 mb-10 sm:grid-cols-2 lg:grid-cols-4 lg:mb-14">
 
-            @foreach ($display_fiestas as $display_fiesta)
+            @foreach ($this->displayFiestas as $display_fiesta)
 
             <!-- Card -->
-            <a class="flex flex-col transition bg-white border border-gray-200 rounded-none group shadow-2xs hover:shadow-md focus:outline-hidden focus:shadow-md dark:bg-neutral-900 dark:border-neutral-800" href="{{ route('fiesta-eventos-single.page', $display_fiesta->f_slug) }}">
+            <a class="flex flex-col transition bg-white border border-gray-200 rounded-md group shadow-2xs hover:shadow-md focus:outline-hidden focus:shadow-md dark:bg-neutral-900 dark:border-neutral-800" href="{{ route('fiesta-eventos-single.page', $display_fiesta->f_slug) }}">
                 <div class="aspect-w-16 aspect-h-9">
-                    <img class="w-full object-cover rounded-none lg:h-[200px] xl:h-[250px] h-[220px]" src="{{ asset(Storage::url($display_fiesta->f_images[0])) }}" alt="{{ $display_fiesta->f_name }}">
+                    <img class="w-full object-cover rounded-md lg:h-[200px] xl:h-[250px] h-[220px]" src="{{ asset(Storage::url($display_fiesta->f_images[0])) }}" alt="{{ $display_fiesta->f_name }}">
                 </div>
                 <div class="p-4 md:p-5">
                     <p class="mt-2 text-xs text-gray-600 uppercase dark:text-neutral-400">
@@ -196,7 +196,7 @@
 
         <!-- Card -->
         <div class="text-center">
-            <div class="inline-block bg-white border border-gray-200 rounded-none shadow-2xs dark:bg-neutral-900 dark:border-neutral-800">
+            <div class="inline-block bg-white border border-gray-200 rounded-md shadow-2xs dark:bg-neutral-900 dark:border-neutral-800">
             <div class="flex items-center px-4 py-3 gap-x-2">
                 <p class="text-gray-600 dark:text-neutral-400">
                 Want to read more?
