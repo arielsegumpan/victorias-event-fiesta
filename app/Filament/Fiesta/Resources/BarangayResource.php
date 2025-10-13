@@ -157,9 +157,21 @@ class BarangayResource extends Resource
             ->emptyStateHeading('No barangays are created')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
-                if ($user->hasRole('barangay_captain')) {
-                    return $query->where('user_id', $user->id);
+
+                // Check if user is a barangay captain
+                if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
+                    // Show only barangays where user is CURRENTLY an active captain
+                    return $query->whereHas('barangayCaptains', function ($captainQuery) use ($user) {
+                        $captainQuery->where('user_id', $user->id)
+                            ->where(function ($termQuery) {
+                                $termQuery->whereNull('term_end')
+                                    ->orWhere('term_end', '>=', now());
+                            });
+                    });
                 }
+
+                // Admin or other roles can see all barangays
+                return $query;
             })
             ->defaultSort('created_at', 'desc');
     }

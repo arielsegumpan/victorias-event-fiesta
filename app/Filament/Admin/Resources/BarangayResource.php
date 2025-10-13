@@ -19,6 +19,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Split;
 use Filament\Tables\Columns\ImageColumn;
@@ -172,6 +173,36 @@ class BarangayResource extends Resource
 
                     Section::make()
                     ->schema([
+
+                        // Select::make('current_captain_user_id')
+                        // ->label('Assign Barangay Captain')
+                        // ->options(function () {
+                        //     return \App\Models\User::whereHas('roles', function ($query) {
+                        //         $query->whereIn('name', [
+                        //             'barangay captain',
+                        //             'barangay_captain',
+                        //             'brgy captain',
+                        //             'brgy_captain',
+                        //             'captain',
+                        //         ]);
+                        //     })
+                        //     ->pluck('name', 'id');
+                        // })
+                        // ->searchable()
+                        // ->preload()
+                        // ->native(false)
+                        // ->hint('Only users with Barangay Captain role are shown.')
+                        // ->afterStateHydrated(function (Select $component, ?Model $record) {
+                        //     // Load current captain when editing
+                        //     if ($record) {
+                        //         $currentCaptain = $record->currentCaptain;
+                        //         if ($currentCaptain) {
+                        //             $component->state($currentCaptain->user_id);
+                        //         }
+                        //     }
+                        // })
+                        // ->dehydrated(false)
+
                         Select::make('barangay_captain_id')
                         ->label('Assign Barangay Captain')
                         ->options(function () {

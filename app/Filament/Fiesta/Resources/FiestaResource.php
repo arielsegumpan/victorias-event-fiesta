@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Fiesta;
 use Filament\Forms\Set;
+use App\Models\Barangay;
 use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -44,21 +45,79 @@ class FiestaResource extends Resource
                     Group::make([
                         Select::make('barangay_id')
                         ->label('Barangay')
-                        ->relationship(name: 'barangay', titleAttribute:'brgy_name', ignoreRecord: true)
+                        ->relationship(
+                            name: 'barangay',
+                            titleAttribute: 'brgy_name',
+                            modifyQueryUsing: function (Builder $query) {
+                                $user = auth()->user();
+
+                                if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
+                                    $query->whereHas('barangayCaptains', function ($captainQuery) use ($user) {
+                                        $captainQuery->where('user_id', $user->id)
+                                            ->where(function ($termQuery) {
+                                                $termQuery->whereNull('term_end')
+                                                    ->orWhere('term_end', '>=', now());
+                                            });
+                                    });
+                                }
+
+                                return $query->where('is_published', true);
+                            }
+                        )
                         ->required()
                         ->native(false)
                         ->searchable()
                         ->preload()
-                        ->optionsLimit(6),
+                        ->default(function () {
+                            $user = auth()->user();
+
+                            // Auto-select if captain has only one barangay
+                            if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
+                                $barangayIds = \App\Models\BarangayCaptain::where('user_id', $user->id)
+                                    ->where(function ($query) {
+                                        $query->whereNull('term_end')
+                                            ->orWhere('term_end', '>=', now());
+                                    })
+                                    ->pluck('barangay_id')
+                                    ->toArray();
+
+                                // If only one barangay, auto-select it
+                                if (count($barangayIds) === 1) {
+                                    return $barangayIds[0];
+                                }
+                            }
+
+                            return null;
+                        })
+                        ->disabled(function () {
+                            $user = auth()->user();
+
+                            // Disable if captain has only one barangay (can't change it)
+                            if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
+                                $count = \App\Models\BarangayCaptain::where('user_id', $user->id)
+                                    ->where(function ($query) {
+                                        $query->whereNull('term_end')
+                                            ->orWhere('term_end', '>=', now());
+                                    })
+                                    ->count();
+
+                                return $count === 1; // Disable if only one barangay
+                            }
+
+                            return false;
+                        })
+                        ->dehydrated(),
 
                         Select::make('created_by')
                         ->label('Created By')
-                        ->relationship(name: 'user', titleAttribute:'name', ignoreRecord: true)
+                        ->relationship(name: 'creator', titleAttribute: 'name')
+                        ->default(auth()->id())
                         ->required()
                         ->native(false)
                         ->searchable()
                         ->preload()
-                        ->optionsLimit(6),
+                        ->disabled()
+                        ->dehydrated(),
 
                         Select::make('category_id')
                         ->label('Category')
@@ -283,9 +342,20 @@ class FiestaResource extends Resource
             ->emptyStateHeading('No fiestas are created')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
-                if ($user->hasAnyRole(['barangay captain', 'barangay_captain' , 'brgy captain', 'brgy_captain', 'captain'])) {
-                    return $query->where('user_id', $user->id);
+
+                // Check if user has barangay captain role
+                if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
+                    // Get the barangay IDs where this user is a captain
+                    $barangayIds = \App\Models\BarangayCaptain::where('user_id', $user->id)
+                        ->pluck('barangay_id')
+                        ->toArray();
+
+                    // Filter fiestas to only show those from the captain's barangay(s)
+                    return $query->whereIn('barangay_id', $barangayIds);
                 }
+
+                // Return unmodified query for other users (admins can see all)
+                return $query;
             })
             ->defaultSort('created_at', 'desc');
     }

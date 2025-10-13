@@ -36,6 +36,9 @@ class FiestaCalendarWidget extends CalendarWidget
 
     protected ?string $defaultEventClickAction = 'edit';
 
+    protected static ?string $maxHeight = '250px';
+
+    protected static ?int $sort = 10;
 
     public function getEvents(array $fetchInfo = []): Collection | array
     {

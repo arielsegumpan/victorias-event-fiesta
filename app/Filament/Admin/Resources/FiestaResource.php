@@ -303,12 +303,12 @@ class FiestaResource extends Resource
 
                 TextColumn::make('f_start_date')
                 ->label('Start Date')
-                ->date('F j, Y, g:i a')
+                ->date('F j, Y')
                 ->sortable(),
 
                 TextColumn::make('f_end_date')
                 ->label('End Date')
-                ->date('F j, Y, g:i a')
+                ->date('F j, Y')
                 ->sortable(),
 
 

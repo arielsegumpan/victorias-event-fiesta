@@ -100,9 +100,19 @@
             <!-- End Card -->
 
             @empty
-                <div class="mx-auto text-center text-gray-800 dark:text-neutral-200 w-lg">
-                    <h2 class="text-3xl font-bold">{{ __('No this->fiestas found') }}</h2>
+                <div class="mx-auto text-center col-span-2 text-gray-800 dark:text-neutral-200 w-lg">
+                    <div class="max-w-2xl text-center mx-auto">
+                        <h1 class="block text-3xl font-bold text-gray-800 sm:text-4xl md:text-5xl dark:text-white">
+                            {{ __('No fiesta is created') }}
+                        </h1>
+                        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni, quidem.</p>
+                    </div>
                 </div>
+
+                <div class="col-span-2">
+                    <img src="{{ asset('imgs/fiesta-404.jpg') }}" alt="" class="w-full object-cover h-96 sm:h-80 rounded-lg">
+                </div>
+
             @endforelse
 
         </div>
