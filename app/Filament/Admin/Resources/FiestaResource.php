@@ -46,7 +46,7 @@ class FiestaResource extends Resource
 {
     protected static ?string $model = Fiesta::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+    protected static ?string $navigationIcon = 'phosphor-confetti';
 
     protected static ?int $navigationSort = 0;
 
@@ -174,6 +174,7 @@ class FiestaResource extends Resource
 
                     TagsInput::make('tags')
                     ->label('Tags')
+                    ->prefixIcon('phosphor-tag')
                     ->reorderable()
                     ->splitKeys(['Tab', ' '])
                     ->nestedRecursiveRules([
@@ -204,7 +205,8 @@ class FiestaResource extends Resource
                         ->maxDate(now()->addYear())
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone')),
+                        ->timezone(config('app.timezone'))
+                        ->suffixIcon('phosphor-calendar-dot'),
 
                         DateTimePicker::make('f_end_date')
                         ->label('End Date')
@@ -216,7 +218,8 @@ class FiestaResource extends Resource
                         ->prefix('Ends')
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone')),
+                        ->timezone(config('app.timezone'))
+                        ->suffixIcon('phosphor-calendar-dots'),
 
                         ToggleButtons::make('is_featured')
                         ->label('Is Featured?')
@@ -322,6 +325,7 @@ class FiestaResource extends Resource
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ])->tooltip('Actions')
+                ->icon('phosphor-dots-three-circle-vertical')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -398,12 +402,12 @@ class FiestaResource extends Resource
                             InfoG::make([
                                 TextEntry::make('barangay.brgy_name')
                                 ->label('Barangay')
-                                ->icon('heroicon-o-home-modern')
+                                ->icon('phosphor-buildings')
                                 ->size(TextEntry\TextEntrySize::Large),
 
                                 TextEntry::make('category.cat_name')
                                 ->label('Category')
-                                ->icon('heroicon-o-tag')
+                                ->icon('phosphor-tag')
                                 ->badge()
                                 ->color('primary'),
                             ])
@@ -425,8 +429,8 @@ class FiestaResource extends Resource
 
                         IconEntry::make('is_featured')
                         ->icon(fn (Fiesta $record): string => $record->is_featured ?
-                        'heroicon-o-check-circle' :
-                        'heroicon-o-x-circle'
+                        'phosphor-check-circle' :
+                        'phosphor-x-circle'
                         )
                         ->color(fn (Fiesta $record): string => $record->is_featured ?
                         'success' :
@@ -436,8 +440,8 @@ class FiestaResource extends Resource
 
                         IconEntry::make('is_published')
                         ->icon(fn (Fiesta $record): string => $record->is_published ?
-                        'heroicon-o-check-circle' :
-                        'heroicon-o-x-circle'
+                        'phosphor-check-circle' :
+                        'phosphor-x-circle'
                         )
                         ->color(fn (Fiesta $record): string => $record->is_published ?
                         'success' :
@@ -447,12 +451,12 @@ class FiestaResource extends Resource
 
                         TextEntry::make('f_start_date')
                         ->label('Start Date')
-                        ->icon('heroicon-o-calendar')
+                        ->icon('phosphor-calendar-dot')
                         ->date('F j, Y, g:i a'),
 
                         TextEntry::make('f_end_date')
                         ->label('End Date')
-                        ->icon('heroicon-o-calendar')
+                        ->icon('phosphor-calendar-dots')
                         ->date('F j, Y, g:i a'),
 
                     ])

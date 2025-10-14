@@ -16,6 +16,8 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -23,15 +25,17 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\DateTimePicker;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages;
+use App\Filament\Fiesta\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Fiesta\Resources\FiestaResource\RelationManagers;
 
 class FiestaResource extends Resource
 {
     protected static ?string $model = Fiesta::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+    protected static ?string $navigationIcon = 'phosphor-confetti';
 
     protected static ?int $navigationSort = 0;
 
@@ -45,83 +49,25 @@ class FiestaResource extends Resource
                     Group::make([
                         Select::make('barangay_id')
                         ->label('Barangay')
-                        ->relationship(
-                            name: 'barangay',
-                            titleAttribute: 'brgy_name',
-                            modifyQueryUsing: function (Builder $query) {
-                                $user = auth()->user();
-
-                                if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
-                                    $query->whereHas('barangayCaptains', function ($captainQuery) use ($user) {
-                                        $captainQuery->where('user_id', $user->id)
-                                            ->where(function ($termQuery) {
-                                                $termQuery->whereNull('term_end')
-                                                    ->orWhere('term_end', '>=', now());
-                                            });
-                                    });
-                                }
-
-                                return $query->where('is_published', true);
-                            }
-                        )
+                        ->relationship(name: 'barangay', titleAttribute:'brgy_name')
                         ->required()
                         ->native(false)
                         ->searchable()
                         ->preload()
-                        ->default(function () {
-                            $user = auth()->user();
-
-                            // Auto-select if captain has only one barangay
-                            if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
-                                $barangayIds = \App\Models\BarangayCaptain::where('user_id', $user->id)
-                                    ->where(function ($query) {
-                                        $query->whereNull('term_end')
-                                            ->orWhere('term_end', '>=', now());
-                                    })
-                                    ->pluck('barangay_id')
-                                    ->toArray();
-
-                                // If only one barangay, auto-select it
-                                if (count($barangayIds) === 1) {
-                                    return $barangayIds[0];
-                                }
-                            }
-
-                            return null;
-                        })
-                        ->disabled(function () {
-                            $user = auth()->user();
-
-                            // Disable if captain has only one barangay (can't change it)
-                            if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
-                                $count = \App\Models\BarangayCaptain::where('user_id', $user->id)
-                                    ->where(function ($query) {
-                                        $query->whereNull('term_end')
-                                            ->orWhere('term_end', '>=', now());
-                                    })
-                                    ->count();
-
-                                return $count === 1; // Disable if only one barangay
-                            }
-
-                            return false;
-                        })
-                        ->dehydrated(),
+                        ->optionsLimit(6),
 
                         Select::make('created_by')
                         ->label('Created By')
-                        ->relationship(name: 'creator', titleAttribute: 'name')
-                        ->default(auth()->id())
+                        ->relationship(name: 'user', titleAttribute:'name')
                         ->required()
                         ->native(false)
                         ->searchable()
                         ->preload()
-                        ->disabled()
-                        ->dehydrated(),
+                        ->optionsLimit(6),
 
                         Select::make('category_id')
                         ->label('Category')
-                        ->relationship(name: 'category', titleAttribute:'cat_name', ignoreRecord: true)
+                        ->relationship(name: 'category', titleAttribute:'cat_name')
                         ->required()
                         ->native(false)
                         ->searchable()
@@ -180,6 +126,7 @@ class FiestaResource extends Resource
                             ]),
                         ])
                         ->columnSpanFull()
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::title($record->cat_name))
 
                     ])
                     ->columns([
@@ -214,6 +161,7 @@ class FiestaResource extends Resource
 
                     TagsInput::make('tags')
                     ->label('Tags')
+                    ->prefixIcon('phosphor-tag')
                     ->reorderable()
                     ->splitKeys(['Tab', ' '])
                     ->nestedRecursiveRules([
@@ -235,21 +183,30 @@ class FiestaResource extends Resource
 
                         DatePicker::make('f_start_date')
                         ->label('Start Date')
+                        ->seconds(false)
                         ->required()
-                        ->format('d/m/Y')
+                        ->displayFormat('F j, Y, g:i A')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
-                        ->maxDate(now()),
+                        ->maxDate(now()->addYear())
+                        ->minDate(now())
+                        ->columnSpanFull()
+                        ->timezone(config('app.timezone'))
+                        ->suffixIcon('phosphor-calendar-dot'),
 
-                        DatePicker::make('s_start_date')
+                        DatePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
-                        ->format('d/m/Y')
+                        ->seconds(false)
+                        ->displayFormat('F j, Y, g:i A')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
-                        ->minDate(now()),
+                        ->minDate(now())
+                        ->columnSpanFull()
+                        ->timezone(config('app.timezone'))
+                        ->suffixIcon('phosphor-calendar-dots'),
 
                         ToggleButtons::make('is_featured')
                         ->label('Is Featured?')
@@ -261,17 +218,6 @@ class FiestaResource extends Resource
                         ])
                         ->dehydrated()
                         ->default('0'),
-
-                        ToggleButtons::make('is_published')
-                        ->label('Is Published?')
-                        ->inline()
-                        ->boolean()
-                        ->options([
-                            '1' => 'Yes',
-                            '0' => 'No',
-                        ])
-                        ->dehydrated()
-                        ->default('0')
                     ])
                     ->columns([
                         'sm' => 1,
@@ -315,7 +261,34 @@ class FiestaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('f_name')
+                ->label('Fiesta Name')
+                ->searchable()
+                ->sortable()
+                ->size(TextColumn\TextColumnSize::Large)
+                ->description(fn (Fiesta $record) => $record->f_slug),
+
+                TextColumn::make('barangay.brgy_name')
+                ->label('Barangay')
+                ->searchable()
+                ->sortable(),
+
+                TextColumn::make('category.cat_name')
+                ->label('Category')
+                ->searchable()
+                ->sortable()
+                ->badge()
+                ->color('primary'),
+
+                TextColumn::make('f_start_date')
+                ->label('Start Date')
+                ->date('F j, Y')
+                ->sortable(),
+
+                TextColumn::make('f_end_date')
+                ->label('End Date')
+                ->date('F j, Y')
+                ->sortable(),
             ])
             ->filters([
                 //
@@ -326,6 +299,7 @@ class FiestaResource extends Resource
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ])->tooltip('Actions')
+                ->icon('phosphor-dots-three-circle-vertical')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -338,7 +312,7 @@ class FiestaResource extends Resource
                 ->icon('heroicon-m-plus')
                 ->label(__('New Fiesta')),
             ])
-            ->emptyStateIcon('heroicon-o-sparkles')
+            ->emptyStateIcon('phosphor-confetti')
             ->emptyStateHeading('No fiestas are created')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
@@ -374,6 +348,7 @@ class FiestaResource extends Resource
             'index' => Pages\ListFiestas::route('/'),
             'create' => Pages\CreateFiesta::route('/create'),
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
+            'view' => ViewFiesta::route('/{record}'),
         ];
     }
 }

@@ -15,25 +15,25 @@ class FiestaStatsOverview extends BaseWidget
         return [
             Stat::make('Total Fiestas', Fiesta::count())
                 ->description('All fiestas in the system')
-                ->descriptionIcon('heroicon-m-calendar')
+                ->descriptionIcon('phosphor-calendar-dot')
                 ->chart($this->getFiestasTrendData())
                 ->color('success'),
 
             Stat::make('Published Fiestas', Fiesta::where('is_published', true)->count())
                 ->description('Currently visible to public')
-                ->descriptionIcon('heroicon-m-eye')
+                ->descriptionIcon('phosphor-eye')
                 ->chart($this->getPublishedTrendData())
                 ->color('info'),
 
             Stat::make('Featured Fiestas', Fiesta::where('is_featured', true)->count())
                 ->description('Highlighted events')
-                ->descriptionIcon('heroicon-m-star')
+                ->descriptionIcon('phosphor-star')
                 ->chart($this->getFeaturedTrendData())
                 ->color('warning'),
 
             Stat::make('Upcoming Fiestas', $this->getUpcomingCount())
                 ->description('Starting within 30 days')
-                ->descriptionIcon('heroicon-m-clock')
+                ->descriptionIcon('phosphor-clock')
                 ->chart($this->getUpcomingTrendData())
                 ->color('success'),
         ];

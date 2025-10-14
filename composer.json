@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
+        "filafly/filament-phosphor-icons": "^1.0",
         "filament/filament": "3.3",
         "guava/calendar": "^1.14",
         "laravel/framework": "^12.0",

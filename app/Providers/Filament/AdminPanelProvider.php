@@ -7,6 +7,7 @@ use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use App\Http\Middleware\PanelRoleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
@@ -45,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-               
+
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -63,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+                PhosphorIcons::make()->thin()
             ]);
     }
 }

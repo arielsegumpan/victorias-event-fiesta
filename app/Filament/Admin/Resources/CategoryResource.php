@@ -25,7 +25,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-sort-ascending';
 
     protected static ?int $navigationSort = 2;
 
@@ -119,7 +119,9 @@ class CategoryResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
-                ])->tooltip('Actions')
+                ])
+                ->tooltip('Actions')
+                ->icon('phosphor-dots-three-circle-vertical')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -132,7 +134,7 @@ class CategoryResource extends Resource
                 ->icon('heroicon-m-plus')
                 ->label(__('New Category')),
             ])
-            ->emptyStateIcon('heroicon-o-rectangle-stack')
+            ->emptyStateIcon('phosphor-sort-ascending')
             ->emptyStateHeading('No Categories are created')
             ->defaultSort('created_at', 'desc');
     }

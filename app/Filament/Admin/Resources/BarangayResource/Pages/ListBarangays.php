@@ -13,7 +13,7 @@ class ListBarangays extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->icon('heroicon-o-plus')->label('New Barangay'),
+            Actions\CreateAction::make()->icon('phosphor-plus')->label('New Barangay'),
         ];
     }
 }

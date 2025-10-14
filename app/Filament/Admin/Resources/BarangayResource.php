@@ -44,7 +44,7 @@ class BarangayResource extends Resource
 {
     protected static ?string $model = Barangay::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+    protected static ?string $navigationIcon = 'phosphor-buildings';
 
     protected static ?int $navigationSort = 1;
 
@@ -84,8 +84,8 @@ class BarangayResource extends Resource
                             '0' => 'No',
                         ])
                         ->icons([
-                            '1' => 'heroicon-o-check-circle',
-                            '0' => 'heroicon-o-x-circle',
+                            '1' => 'phosphor-check-circle',
+                            '0' => 'phosphor-x-circle',
                         ])
                         ->colors([
                             '1' => 'primary',
@@ -103,8 +103,8 @@ class BarangayResource extends Resource
                             '0' => 'No',
                         ])
                         ->icons([
-                            '1' => 'heroicon-o-check-circle',
-                            '0' => 'heroicon-o-x-circle',
+                            '1' => 'phosphor-check-circle',
+                            '0' => 'phosphor-x-circle',
                         ])
                         ->colors([
                             '1' => 'primary',
@@ -274,16 +274,16 @@ class BarangayResource extends Resource
 
                 IconColumn::make('is_published')
                     ->icon(fn (string $state): string => match ($state) {
-                        '1' => 'heroicon-o-check-circle',
-                        '0' => 'heroicon-o-x-circle',
+                        '1' => 'phosphor-check-circle',
+                        '0' => 'phosphor-x-circle',
                     })
                     ->label('Is Published?')
                     ->boolean(),
 
                 IconColumn::make('is_featured')
                     ->icon(fn (string $state): string => match ($state) {
-                        '1' => 'heroicon-o-check-circle',
-                        '0' => 'heroicon-o-x-circle',
+                        '1' => 'phosphor-check-circle',
+                        '0' => 'phosphor-x-circle',
                     })
                     ->label('Is Featured?')
                     ->boolean(),
@@ -303,7 +303,9 @@ class BarangayResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
-                ])->tooltip('Actions')
+                ])
+                ->tooltip('Actions')
+                ->icon('phosphor-dots-three-circle-vertical')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -316,7 +318,7 @@ class BarangayResource extends Resource
                 ->icon('heroicon-m-plus')
                 ->label(__('New Barangay')),
             ])
-            ->emptyStateIcon('heroicon-o-home-modern')
+            ->emptyStateIcon('phosphor-buildings')
             ->emptyStateHeading('No barangays are created')
             ->defaultSort('created_at', 'desc');
     }
@@ -396,8 +398,8 @@ class BarangayResource extends Resource
                             InfoG::make([
                                 IconEntry::make('is_published')
                                 ->icon(fn (string $state): string => match ($state) {
-                                    '1' => 'heroicon-o-check-circle',
-                                    '0' => 'heroicon-o-x-circle',
+                                    '1' => 'phosphor-check-circle',
+                                    '0' => 'phosphor-x-circle',
                                 })
                                 ->label('Is Published?')
                                 ->boolean()
@@ -412,8 +414,8 @@ class BarangayResource extends Resource
 
                                 IconEntry::make('is_featured')
                                 ->icon(fn (string $state): string => match ($state) {
-                                    '1' => 'heroicon-o-check-circle',
-                                    '0' => 'heroicon-o-x-circle',
+                                    '1' => 'phosphor-check-circle',
+                                    '0' => 'phosphor-x-circle',
                                 })
                                 ->label('Is Featured?')
                                 ->boolean()

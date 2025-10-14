@@ -8,6 +8,7 @@ use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use App\Filament\Auth\Pages\Register;
+use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use App\Http\Middleware\PanelRoleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
@@ -62,6 +63,9 @@ class AuthPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 PanelRoleMiddleware::class
+            ])
+            ->plugins([
+                PhosphorIcons::make()->thin()
             ]);
     }
 }

@@ -15,25 +15,25 @@ class ReviewStatsOverview extends BaseWidget
         return [
             Stat::make('Total Reviews', Review::count())
                 ->description('All reviews submitted')
-                ->descriptionIcon('heroicon-m-chat-bubble-left-right')
+                ->descriptionIcon('phosphor-chats-circle')
                 ->chart($this->getReviewsTrendData())
                 ->color('success'),
 
             Stat::make('Pending Reviews', Review::where('is_approved', false)->count())
                 ->description('Awaiting moderation')
-                ->descriptionIcon('heroicon-m-clock')
+                ->descriptionIcon('phosphor-clock')
                 ->chart($this->getPendingTrendData())
                 ->color('warning'),
 
             Stat::make('Average Rating', number_format($this->getAverageRating(), 1))
                 ->description('Overall satisfaction')
-                ->descriptionIcon('heroicon-m-star')
+                ->descriptionIcon('phosphor-star')
                 ->chart($this->getAverageRatingTrendData())
                 ->color('info'),
 
             Stat::make('Reviews Today', $this->getTodayReviewsCount())
                 ->description('Submitted in last 24h')
-                ->descriptionIcon('heroicon-m-calendar')
+                ->descriptionIcon('phosphor-calendar-dots')
                 ->chart($this->getDailyReviewsData())
                 ->color('success'),
         ];
