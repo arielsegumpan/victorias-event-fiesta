@@ -16,11 +16,11 @@ class CreateFiesta extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['f_name'] = Str::title($data['f_name']);
         $data['f_slug'] = Str::slug($data['f_name']);
         return $data;
     }
+
 }

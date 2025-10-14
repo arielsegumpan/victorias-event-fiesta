@@ -8,6 +8,9 @@ use App\Models\Barangay;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Carbon;
+use Filament\Infolists\Infolist;
+use Filament\Support\Colors\Color;
 use Illuminate\Support\Collection;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
@@ -17,14 +20,18 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Guava\Calendar\Actions\CreateAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Guava\Calendar\Widgets\CalendarWidget;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Infolists\Components\ImageEntry;
 use Guava\Calendar\ValueObjects\CalendarEvent;
 use App\Filament\Admin\Resources\FiestaResource;
 use Guava\Calendar\ValueObjects\CalendarResource;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
 
 class FiestaCalendarWidget extends CalendarWidget
 {
@@ -32,9 +39,16 @@ class FiestaCalendarWidget extends CalendarWidget
 
     protected bool $eventClickEnabled = true;
 
-    protected bool $eventResizeEnabled = true;
+    protected bool $eventResizeEnabled = false;
 
-    protected ?string $defaultEventClickAction = 'edit';
+    protected static string $recordKey = 'id';
+
+    protected static string $startDateField = 'f_start_date';
+
+    protected static string $endDateField = 'f_end_date';
+
+    // protected ?string $defaultEventClickAction = 'edit';
+    protected ?string $defaultEventClickAction = 'view';
 
     protected static ?string $maxHeight = '250px';
 
@@ -50,8 +64,104 @@ class FiestaCalendarWidget extends CalendarWidget
     {
         return [
             'nowIndicator' => true,
-            'slotDuration' => '00:15:00'
+            // 'slotDuration' => '00:15:00'
         ];
+    }
+
+    // Handle event resize to update f_end_date
+    public function onEventResize(array $info = []): bool
+    {
+        $eventId = $info['event']['id'] ?? $info['id'] ?? null;
+
+        if (!$eventId) {
+            return false;
+        }
+
+        $fiesta = Fiesta::find($eventId);
+
+        if ($fiesta) {
+            // Extract just the date part since your DB uses date type
+            $endDate = Carbon::parse($info['event']['end'] ?? $info['end'])->format('Y-m-d');
+
+            $fiesta->update([
+                'f_end_date' => $endDate
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function getViewInfolist(Fiesta $record): Infolist
+    {
+        return Infolist::make()
+            ->record($record)
+            ->schema([
+                Section::make('Fiesta Details')
+                    ->schema([
+                        TextEntry::make('f_name')
+                            ->label('Fiesta Name')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->weight('bold'),
+
+                        TextEntry::make('barangay.brgy_name')
+                            ->label('Barangay')
+                            ->badge()
+                            ->color(Color::Blue),
+
+                        TextEntry::make('category.cat_name')
+                            ->label('Category')
+                            ->badge()
+                            ->color(Color::Orange),
+
+                        TextEntry::make('f_start_date')
+                            ->label('Start Date')
+                            ->dateTime('F j, Y')
+                            ->icon('heroicon-o-calendar'),
+
+                        TextEntry::make('f_end_date')
+                            ->label('End Date')
+                            ->dateTime('F j, Y')
+                            ->icon('heroicon-o-calendar'),
+
+                        TextEntry::make('f_description')
+                            ->label('Description')
+                            ->html()
+                            ->columnSpanFull(),
+
+                        TextEntry::make('tags')
+                            ->label('Tags')
+                            ->badge()
+                            ->separator(',')
+                            ->columnSpanFull(),
+
+                        TextEntry::make('is_featured')
+                            ->label('Featured')
+                            ->badge()
+                            ->color(fn (bool $state): string => $state ? 'success' : 'gray')
+                            ->formatStateUsing(fn (bool $state): string => $state ? 'Yes' : 'No'),
+
+                        TextEntry::make('is_published')
+                            ->label('Published')
+                            ->badge()
+                            ->color(fn (bool $state): string => $state ? 'success' : 'gray')
+                            ->formatStateUsing(fn (bool $state): string => $state ? 'Yes' : 'No'),
+                    ])
+                    ->columns(2),
+
+                Section::make('Images')
+                    ->schema([
+                        ImageEntry::make('f_images')
+                            ->label('')
+                            ->circular()
+                            ->stacked()
+                            ->limit(5)
+                            ->limitedRemainingText(),
+                    ])
+                    ->collapsible(),
+            ]);
     }
 
 
@@ -196,29 +306,25 @@ class FiestaCalendarWidget extends CalendarWidget
                     Section::make()
                     ->schema([
 
-                        DateTimePicker::make('f_start_date')
+                        DatePicker::make('f_start_date')
                         ->label('Start Date')
-                        ->seconds(false)
                         ->required()
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
                         ->maxDate(now())
-                        ->columnSpanFull()
-                        ->timezone(config('app.timezone')),
+                        ->columnSpanFull(),
 
-                        DateTimePicker::make('f_end_date')
+                        DatePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
-                        ->seconds(false)
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
                         ->minDate(now())
-                        ->columnSpanFull()
-                        ->timezone(config('app.timezone')),
+                        ->columnSpanFull(),
 
                         ToggleButtons::make('is_featured')
                         ->label('Is Featured?')

@@ -34,6 +34,8 @@ class Fiesta extends Model implements Eventable
         'is_featured' => 'boolean',
         'is_approved' => 'boolean',
         'tags' => 'array',
+        'f_start_date' => 'date',
+        'f_end_date' => 'date',
     ];
 
     public function category() : BelongsTo
@@ -75,11 +77,12 @@ class Fiesta extends Model implements Eventable
 
         return CalendarEvent::make($this)
             ->title($this->f_name)
-            ->start(Carbon::parse($this->f_start_date)->timezone('Asia/Manila')->toIso8601String())
-            ->end(Carbon::parse($this->f_end_date)->timezone('Asia/Manila')->toIso8601String())
+            ->start(Carbon::parse($this->f_start_date))
+            ->end(Carbon::parse($this->f_end_date))
+            ->allDay(true)
             ->styles([
                 'background-color' => '#ff9800',
-                'font-size: 12px'
+                'font-size: 10px'
             ]);
     }
 }

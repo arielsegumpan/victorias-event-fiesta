@@ -37,10 +37,13 @@ class Barangay extends Model
         return $this->hasMany(BarangayCaptain::class, 'barangay_id');
     }
 
-    public function currentCaptain() : HasOne
+    public function currentCaptain(): HasOne
     {
         return $this->hasOne(BarangayCaptain::class, 'barangay_id')
-                    ->whereNull('term_end')
-                    ->orWhere('term_end', '>=', now());
+                    ->where(function ($query) {
+                        $query->whereNull('term_end')
+                              ->orWhere('term_end', '>=', now());
+                    })
+                    ->orderBy('term_start', 'desc');
     }
 }

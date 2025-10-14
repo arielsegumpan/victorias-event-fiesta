@@ -1,5 +1,5 @@
 <div>
-
+    {{-- @dd($this->fiesta->tags[0]['tag_name']) --}}
     <!-- Blog Article -->
     <div class="max-w-[85rem] px-4 sm:px-6 lg:px-8 mx-auto">
         <div class="grid lg:grid-cols-3 gap-y-8 lg:gap-y-0 lg:gap-x-6">
@@ -8,6 +8,7 @@
                 <!-- MAIN CONTENT -->
                 <div class="py-8 lg:pe-8">
                     <div class="space-y-5 lg:space-y-8">
+
                         <a class="inline-flex items-center gap-x-1.5 text-sm text-gray-600 decoration-2 hover:underline focus:outline-hidden focus:underline dark:text-orange-500"
                             href="{{ route('fiesta-eventos.page') }}">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -19,6 +20,24 @@
                         </a>
 
                         <h2 class="text-3xl font-bold lg:text-5xl dark:text-white">{{ $this->fiesta->f_name }}</h2>
+
+                        <div class="flex flex-row gap-x-4">
+                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-lg text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-500">
+                                 <svg class="shrink-0 size-4 text-green-800 dark:text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><rect x="40" y="40" width="176" height="176" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="176" y1="24" x2="176" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="80" y1="24" x2="80" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="40" y1="88" x2="216" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><circle cx="128" cy="152" r="12"/></svg>
+                                {{  $this->fiesta->f_start_date->format('F j, Y') }}
+                            </span>
+
+                            <span class="text-gray-800 dark:text-gray-400">
+                                -
+                            </span>
+
+                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-lg text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">
+                                <svg class="shrink-0 size-4 text-red-800 dark:text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><rect x="40" y="40" width="176" height="176" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="176" y1="24" x2="176" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="80" y1="24" x2="80" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><line x1="40" y1="88" x2="216" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><circle cx="128" cy="132" r="8"/><circle cx="172" cy="132" r="8"/><circle cx="84" cy="172" r="8"/><circle cx="128" cy="172" r="8"/><circle cx="172" cy="172" r="8"/></svg>
+                                {{ $this->fiesta?->f_end_date->format('F j, Y') }}
+                            </span>
+
+
+                        </div>
 
                         <div class="flex items-center gap-x-5">
                             <a class="inline-flex items-center gap-1.5 py-1 px-3 sm:py-2 sm:px-4 rounded-full text-xs sm:text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
@@ -188,22 +207,16 @@
                         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-y-5 lg:gap-y-0">
                             <!-- Badges/Tags -->
                             <div>
-                                <a class="m-0.5 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                                    href="#">
-                                    Plan
-                                </a>
-                                <a class="m-0.5 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                                    href="#">
-                                    Web development
-                                </a>
-                                <a class="m-0.5 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                                    href="#">
-                                    Free
-                                </a>
-                                <a class="m-0.5 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                                    href="#">
-                                    Team
-                                </a>
+                                @forelse ($this->fiesta->tags ?? [] as $tag)
+                                    <a class="m-0.5 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                                        href="#">
+                                        {{ Str::ucfirst($tag->tag_name) }}
+                                    </a>
+                                @empty
+                                    <span class="text-gray-500 dark:text-neutral-400">{{ __('No tags') }}</span>
+                                @endforelse
+
+
                             </div>
                             <!-- End Badges/Tags -->
 
@@ -333,8 +346,8 @@
                         class="flex items-center pb-8 mb-8 border-b border-gray-200 group gap-x-3 dark:border-neutral-700">
                         <a class="block shrink-0 focus:outline-hidden" href="#">
                             <img class="rounded-full size-10"
-                                src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-                                alt="Avatar">
+                                src="https://avatar.iran.liara.run/username?username={{ $this->fiesta->user?->name }}"
+                                alt="{{ $this->fiesta->user->name }}">
                         </a>
 
                         <a class="block group grow focus:outline-hidden" href="">
@@ -343,7 +356,7 @@
                                 {{ $this->fiesta->user->name }}
                             </h5>
                             <p class="text-sm text-gray-500 dark:text-neutral-500">
-                                {{ __('Author') }}
+                                {{ $this->fiesta->user?->name }}
                             </p>
                         </a>
 
@@ -464,8 +477,6 @@
                             </div>
                         </div>
 
-                        {{-- @dd($this->fiesta->barangay) --}}
-
                         @if(!@empty($this->fiesta->barangay))
                         <div class="lg:mt-8 ">
                             <h1 class="mb-5 text-lg font-bold lg:mb-8 lg:text-3xl dark:text-white">{{ __('Event Host')
@@ -480,8 +491,7 @@
                                         $this->fiesta->barangay->brgy_name }}</h2>
                                 </div>
                                 <div class="text-gray-600 dark:text-neutral-200">
-                                    <p class="mb-2">{{ __('Barangay Description') }}: {{
-                                        $this->fiesta->barangay->brgy_description }}</p>
+                                    <p class="mb-2"> {!! Str::limit($this->fiesta->barangay->brgy_desc, 300, '...') !!}</p>
                                 </div>
                             </div>
                         </div>

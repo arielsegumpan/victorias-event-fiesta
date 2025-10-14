@@ -9,8 +9,10 @@ use Filament\Forms\Set;
 use App\Models\Barangay;
 use App\Models\Category;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
@@ -20,14 +22,22 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\Split;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Group as InfoG;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Infolists\Components\Section as InfoSec;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages;
+use App\Filament\Fiesta\Resources\FiestaResource\Pages\EditFiesta;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Fiesta\Resources\FiestaResource\RelationManagers;
 
@@ -39,6 +49,8 @@ class FiestaResource extends Resource
 
     protected static ?int $navigationSort = 0;
 
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -46,25 +58,25 @@ class FiestaResource extends Resource
 
                 Section::make()
                 ->schema([
+
+                    TextInput::make('f_name')
+                    ->label('Fiesta Name')
+                    ->required()
+                    ->maxLength(255)
+                    ->unique(Fiesta::class, 'f_slug', ignoreRecord: true)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('f_slug', Str::slug($state))),
+
+                    TextInput::make('f_slug')
+                    ->label('Fiesta Name')
+                    ->disabled()
+                    ->dehydrated()
+                    ->required()
+                    ->maxLength(255)
+                    ->unique(Fiesta::class, 'f_slug', ignoreRecord: true),
+
+
                     Group::make([
-                        Select::make('barangay_id')
-                        ->label('Barangay')
-                        ->relationship(name: 'barangay', titleAttribute:'brgy_name')
-                        ->required()
-                        ->native(false)
-                        ->searchable()
-                        ->preload()
-                        ->optionsLimit(6),
-
-                        Select::make('created_by')
-                        ->label('Created By')
-                        ->relationship(name: 'user', titleAttribute:'name')
-                        ->required()
-                        ->native(false)
-                        ->searchable()
-                        ->preload()
-                        ->optionsLimit(6),
-
                         Select::make('category_id')
                         ->label('Category')
                         ->relationship(name: 'category', titleAttribute:'cat_name')
@@ -135,22 +147,6 @@ class FiestaResource extends Resource
                         'lg' => 2,
                     ]),
 
-                    TextInput::make('f_name')
-                    ->label('Fiesta Name')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Fiesta::class, 'f_slug', ignoreRecord: true)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('f_slug', Str::slug($state))),
-
-                    TextInput::make('f_slug')
-                    ->label('Fiesta Name')
-                    ->disabled()
-                    ->dehydrated()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Fiesta::class, 'f_slug', ignoreRecord: true),
-
                     RichEditor::make('f_description')
                     ->label('Description')
                     ->required()
@@ -159,15 +155,39 @@ class FiestaResource extends Resource
                     ])
                     ->maxLength(65535),
 
-                    TagsInput::make('tags')
+
+                    Select::make('tags')
                     ->label('Tags')
-                    ->prefixIcon('phosphor-tag')
-                    ->reorderable()
-                    ->splitKeys(['Tab', ' '])
-                    ->nestedRecursiveRules([
-                        'min:3',
-                        'max:255',
+                    ->relationship('tags', 'tag_name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->native(false)
+                    ->createOptionForm([
+                        TextInput::make('tag_name')
+                            ->label('Tag Name')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique('tags', 'tag_name')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('tag_slug', Str::slug($state))),
+
+                        TextInput::make('tag_slug')
+                            ->label('Slug')
+                            ->disabled()
+                            ->dehydrated()
+                            ->required()
+                            ->maxLength(255)
+                            ->unique('tags', 'tag_slug'),
                     ])
+                    ->createOptionUsing(function (array $data): int {
+                        $tag = \App\Models\Tag::create([
+                            'tag_name' => $data['tag_name'],
+                            'tag_slug' => Str::slug($data['tag_name']),
+                        ]);
+
+                        return $tag->id;
+                    })
                     ->columnSpanFull()
 
                 ])
@@ -183,29 +203,25 @@ class FiestaResource extends Resource
 
                         DatePicker::make('f_start_date')
                         ->label('Start Date')
-                        ->seconds(false)
                         ->required()
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
                         ->maxDate(now()->addYear())
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone'))
                         ->suffixIcon('phosphor-calendar-dot'),
 
                         DatePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
-                        ->seconds(false)
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone'))
                         ->suffixIcon('phosphor-calendar-dots'),
 
                         ToggleButtons::make('is_featured')
@@ -350,5 +366,149 @@ class FiestaResource extends Resource
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
             'view' => ViewFiesta::route('/{record}'),
         ];
+    }
+
+
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            ViewFiesta::class,
+            EditFiesta::class,
+        ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+
+                InfoG::make([
+
+                    InfoG::make([
+                        InfoSec::make()
+                        ->schema([
+                            Split::make([
+                                ImageEntry::make('f_images')
+                                ->hiddenlabel()
+                                ->height(130)
+                                ->stacked()
+                                ->circular()
+                                ->overlap(8)
+                                ->limit(2)
+                                ->limitedRemainingText()
+                                ->extraImgAttributes([
+                                    'loading' => 'lazy',
+                                ])
+                                ->grow(false),
+
+                                InfoG::make([
+                                    TextEntry::make('f_name')
+                                    ->label('')
+                                    ->size(TextEntry\TextEntrySize::Large)
+                                    ->weight('bold'),
+
+                                    TextEntry::make('f_slug')
+                                    ->label(''),
+
+                                    InfoG::make([
+                                        TextEntry::make('barangay.brgy_name')
+                                        ->label('Barangay')
+                                        ->icon('phosphor-buildings')
+                                        ->size(TextEntry\TextEntrySize::Large),
+
+                                        TextEntry::make('category.cat_name')
+                                        ->label('Category')
+                                        ->icon('phosphor-sort-ascending')
+                                        ->badge()
+                                        ->color('primary'),
+                                    ])
+                                    ->columns([
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                    ]),
+                                ])
+                            ])
+                            ->from('md')
+                            ->columnSpanFull(),
+                        ])
+                        ->columnSpanFull(),
+
+                        InfoSec::make()
+                        ->schema([
+                            TextEntry::make('f_description')
+                            ->label('')
+                            ->markdown()
+                        ]),
+                    ])
+                    ->columnSpan([
+                        'default' => 1,
+                        'md' => 3,
+                        'lg' => 3
+                    ]),
+
+
+                    InfoG::make([
+                        InfoSec::make()
+                            ->schema([
+                                IconEntry::make('is_featured')
+                                ->icon(fn (Fiesta $record): string => $record->is_featured ?
+                                    'phosphor-check-circle' : 'phosphor-x-circle')
+                                ->color(fn (Fiesta $record): string => $record->is_featured ?
+                                    'success' :'danger')
+                                ->label('Is Featured?'),
+
+                                IconEntry::make('is_published')
+                                ->icon(fn (Fiesta $record): string => $record->is_published ?
+                                    'phosphor-check-circle' : 'phosphor-x-circle' )
+                                ->color(fn (Fiesta $record): string => $record->is_published ?
+                                    'success' : 'danger')
+                                    ->label('Is Published?'),
+
+                                TextEntry::make('f_start_date')
+                                ->label('Start Date')
+                                ->icon('phosphor-calendar-dot')
+                                ->date('F j, Y'),
+
+                                TextEntry::make('f_end_date')
+                                ->label('End Date')
+                                ->icon('phosphor-calendar-dots')
+                                ->date('F j, Y'),
+                        ])
+                        ->columns([
+                            'default' => 1,
+                            'md' => 2,
+                            'lg' => 2
+                        ]),
+
+                        InfoSec::make('Tags')
+                        ->icon('phosphor-tag')
+                        ->schema([
+                            TextEntry::make('tags.tag_name')
+                            ->label('')
+                            ->badge()
+                            ->color('primary')
+                            ->formatStateUsing(fn ($state): string => Str::ucfirst($state))
+                        ])
+                    ])
+                    ->columnSpan([
+                        'default' => 1,
+                        'md' => 2,
+                        'lg' => 2
+                    ]),
+
+                ])
+                ->columns([
+                    'default' => 1,
+                    'md' => 5,
+                    'lg' => 5
+                ])
+                ->columnSpanFull()
+
+
+
+
+            ]);
     }
 }

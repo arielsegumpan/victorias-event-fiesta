@@ -78,6 +78,7 @@ class User extends Authenticatable implements FilamentUser
             'brgy captain' => Filament::getPanel('fiesta')->getUrl(),
             'brgy_captain' => Filament::getPanel('fiesta')->getUrl(),
             'captain' => Filament::getPanel('fiesta')->getUrl(),
+            'victoriasanon' => redirect()->route('home.page'),
             default => Filament::getPanel('auth')->getUrl(),
         };
     }
@@ -126,5 +127,5 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Fiesta::class, 'created_by');
     }
 
-    
+
 }

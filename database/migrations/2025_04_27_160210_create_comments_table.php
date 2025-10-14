@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Fiesta::class,'fiesta_id')->constrained('fiestas')->cascadeOnDelete();
             $table->longText('comment')->nullable();
             $table->json('comment_imgs')->nullable();
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

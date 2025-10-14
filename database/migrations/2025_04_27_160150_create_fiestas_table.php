@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('f_start_date')->nullable();
             $table->date('f_end_date')->nullable();
             $table->boolean('is_featured')->default(0);
-            $table->boolean('is_published')->default(1);
+            $table->boolean('is_published')->default(0);
             $table->timestamps();
         });
     }

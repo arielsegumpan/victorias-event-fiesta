@@ -1,5 +1,6 @@
 <div>
     {{-- @dd($this->fiestaTopContent) --}}
+    {{-- @dd($pyestas) --}}
     <!-- Card Blog -->
     <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
         @if(!empty($this->fiestaTopContent))
@@ -8,7 +9,7 @@
             <div class="sm:order-2">
                 <div class="relative pt-[30%] sm:pt-[70%] rounded-md">
                     @if(!empty($this->fiestaTopContent) && !empty($this->fiestaTopContent->f_images[0]))
-                    <img class="size-full absolute top-0 start-0 object-cover rounded-md h-[250px] lg:h-[450px] xxl:h-[450px]" src="{{ asset(Storage::url($this->fiestaTopContent->f_images[0])) }}" alt="{{ $this->fiestaTopContent->f_title }}">
+                    <img class="size-full absolute top-0 start-0 object-cover rounded-2xl h-[250px] lg:h-[450px] xxl:h-[450px]" src="{{ asset(Storage::url($this->fiestaTopContent->f_images[0])) }}" alt="{{ $this->fiestaTopContent->f_title }}">
                     @else
                     <p class="text-gray-800 dark:text-neutral-200">{{ __('No image')}}</p>
                     @endif
@@ -29,15 +30,15 @@
                 <!-- Avatar -->
                 <div class="flex items-center mt-6 sm:mt-10">
                     <div class="shrink-0">
-                    <img class="rounded-md size-10 sm:h-14 sm:w-14" src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80" alt="Blog Image">
+                    <img class="rounded-md size-10 sm:h-14 sm:w-14" src="https://avatar.iran.liara.run/username?username={{ $this->fiestaTopContent->user->name }}" alt="{{ $this->fiestaTopContent->user->name }}">
                     </div>
 
                     <div class="ms-3 sm:ms-4">
                     <p class="font-semibold text-gray-800 sm:mb-1 dark:text-neutral-200">
-                        {{ $this->fiestaTopContent->user->name . ' (' . $this->fiestaTopContent->user->email .')' ?? '' }}
+                        {{ $this->fiestaTopContent->user->name }}
                     </p>
                     <p class="text-xs text-gray-500 dark:text-neutral-500">
-                        {{ __('Author') }}
+                        {{ $this->fiestaTopContent->user->email }}
                     </p>
                     </div>
                 </div>
@@ -63,7 +64,7 @@
             <!-- Card -->
             <a wire:key='{{ $fiesta->id . '-' .  $fiesta->f_name }}' class="relative block rounded-md group focus:outline-hidden" href="{{ route('fiesta-eventos-single.page', $fiesta->f_slug) }}">
                 <div class="shrink-0 relative rounded-md overflow-hidden w-full h-87.5 before:absolute before:inset-x-0 before:z-1 before:size-full before:bg-linear-to-t before:from-gray-900/70">
-                    <img class="absolute top-0 object-cover size-full start-0" src="{{ asset('storage/' . $fiesta->f_images[0]) }}" alt="{{ $fiesta->f_name }}">
+                    <img class="absolute top-0 object-cover size-full start-0 rounded-2xl" src="{{ asset('storage/' . $fiesta->f_images[0]) }}" alt="{{ $fiesta->f_name }}">
                 </div>
 
                 <div class="absolute inset-x-0 top-0 z-10">
@@ -71,7 +72,7 @@
                     <!-- Avatar -->
                     <div class="flex items-center">
                         <div class="shrink-0">
-                        <img class="border-2 border-white rounded-md size-11" src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80" alt="Avatar">
+                        <img class="border-none rounded-md size-11" src="https://avatar.iran.liara.run/username?username={{ $fiesta->user?->name }}" alt="{{ $fiesta->user?->name }}">
                         </div>
                         <div class="ms-2.5 sm:ms-4">
                         <h4 class="font-semibold text-white">
@@ -105,7 +106,7 @@
                         <h1 class="block text-3xl font-bold text-gray-800 sm:text-4xl md:text-5xl dark:text-white">
                             {{ __('No fiesta is created') }}
                         </h1>
-                        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni, quidem.</p>
+                        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400"> {{ __('Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos reiciendis accusamus dolores tenetur harum laudantium!') }} </p>
                     </div>
                 </div>
 

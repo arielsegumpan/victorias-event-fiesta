@@ -30,7 +30,7 @@ class CreateBarangay extends CreateRecord
         // // Store captain ID separately
         // $this->captainUserId = $data['current_captain_user_id'] ?? null;
         // unset($data['current_captain_user_id']);
-        dd($data);
+        // dd($data);
         return $data;
     }
 

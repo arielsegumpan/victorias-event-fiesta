@@ -29,6 +29,12 @@
                     </a>
 
                     <a class="p-2 flex items-center text-sm rounded-md focus:outline-hidden
+                        {{ request()->routeIs('barangays.page') || request()->routeIs('barangay-single.page') ? 'bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200' : 'text-gray-800 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700' }}"
+                        href="{{ route('barangays.page') }}">
+                        {{ __('Barangays') }}
+                    </a>
+
+                    <a class="p-2 flex items-center text-sm rounded-md focus:outline-hidden
                         {{ request()->routeIs('fiesta-eventos.page') || request()->routeIs('fiesta-eventos-single.page') ? 'bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200' : 'text-gray-800 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700' }}"
                         href="{{ route('fiesta-eventos.page') }}">
                         {{ __('Fiesta & Eventos') }}

@@ -29,8 +29,9 @@ class FiestaEventSingle extends Component
         return Fiesta::with([
             'category:id,cat_name',
             'user:id,name,email',
-            'barangay' => fn($q) => $q->where('is_published', true)->select('id', 'brgy_name'),
-            'reviews:id,fiesta_id,rating'
+            'barangay' => fn($q) => $q->where('is_published', true)->select('id', 'brgy_name','brgy_slug','brgy_logo','brgy_desc','brgy_address','brgy_contact','brgy_email', 'is_published'),
+            'reviews:id,fiesta_id,rating',
+            'tags:id,tag_name,tag_slug',
         ])
         ->findOrFail($this->fiestaId);
     }
@@ -68,11 +69,6 @@ class FiestaEventSingle extends Component
             ]];
         })->toArray();
     }
-
-    // public function placeholder()
-    // {
-    //     return view('livewire.placeholders.fiesta-loading');
-    // }
 
     public function render()
     {

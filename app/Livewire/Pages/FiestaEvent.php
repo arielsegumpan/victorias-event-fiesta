@@ -12,10 +12,19 @@ use Livewire\Attributes\Computed;
 class FiestaEvent extends Component
 {
     use WithPagination;
-    
+
     public function render()
     {
-        return view('livewire.pages.fiesta-event');
+        $pyesta = Fiesta::with(['category', 'user', 'barangay'])
+            ->where('is_published', 1)
+            ->where('is_featured', 1)
+            ->orderBy('created_at', 'desc')
+            ->paginate(6)
+            ->through(function ($fiesta_strip) {
+                $fiesta_strip->strip_content = Str::limit(strip_tags($fiesta_strip->f_description), 70);
+                return $fiesta_strip;
+            });
+        return view('livewire.pages.fiesta-event', ['pyestas' => $pyesta]);
     }
 
     #[Computed]

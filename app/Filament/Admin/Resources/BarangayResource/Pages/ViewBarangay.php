@@ -12,13 +12,13 @@ class ViewBarangay extends ViewRecord
 {
     protected static string $resource = BarangayResource::class;
 
-    protected static ?string $recordTitleAttribute = 'brgy_name';
+    protected static ?string $recordTitleAttribute = 'f_name';
 
     public function getTitle(): string | Htmlable
     {
         /** @var Barangay */
         $record = $this->getRecord();
-        return Str::ucwords($record->brgy_name);
+        return Str::ucwords($record->f_name);
     }
 
     protected function getActions(): array

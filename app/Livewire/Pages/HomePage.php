@@ -14,8 +14,8 @@ class HomePage extends Component
     public function displayFiestas()
     {
         return Fiesta::with('category:id,cat_name')
-        ->where('is_published', 1)
-        ->where('is_featured', 1)
+        ->where('is_published', true)
+        ->where('is_featured', true)
         ->orderBy('created_at', 'desc')
         ->take(4)
         ->get();

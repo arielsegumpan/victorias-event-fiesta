@@ -2,7 +2,11 @@
     <!-- Features -->
     <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
         <div class="aspect-w-16 aspect-h-7">
-            <img class="w-full object-cover rounded-md h-[350px] xxl:h-[280px]" src="https://images.unsplash.com/photo-1624571409412-1f253e1ecc89?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80" alt="Features Image">
+            @if(!isset($this->displayFiestas))
+            <img class="w-full object-cover rounded-md h-[350px] xxl:h-[280px]" src="{{ asset(Storage::url($this->displayFiestas[0]['f_images'][0])) }}" alt="{{ $this->displayFiestas[0]['f_name'] }}">
+            @else
+            <img class="w-full object-cover rounded-md h-[350px] xxl:h-[280px]" src="https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740" alt="No Image">
+            @endif
         </div>
 
         <!-- Grid -->

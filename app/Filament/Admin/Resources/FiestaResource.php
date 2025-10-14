@@ -41,6 +41,7 @@ use App\Filament\Admin\Resources\FiestaResource\Pages;
 use App\Filament\Admin\Resources\FiestaResource\Pages\EditFiesta;
 use App\Filament\Admin\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Admin\Resources\FiestaResource\RelationManagers;
+use App\Filament\Admin\Resources\FiestaResource\Pages\ManageFiestaComments;
 
 class FiestaResource extends Resource
 {
@@ -172,17 +173,40 @@ class FiestaResource extends Resource
                     ])
                     ->maxLength(65535),
 
-                    TagsInput::make('tags')
-                    ->label('Tags')
-                    ->prefixIcon('phosphor-tag')
-                    ->reorderable()
-                    ->splitKeys(['Tab', ' '])
-                    ->nestedRecursiveRules([
-                        'min:3',
-                        'max:255',
-                    ])
-                    ->columnSpanFull()
 
+                    Select::make('tags')
+                    ->label('Tags')
+                    ->relationship('tags', 'tag_name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->native(false)
+                    ->createOptionForm([
+                        TextInput::make('tag_name')
+                            ->label('Tag Name')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique('tags', 'tag_name')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('tag_slug', Str::slug($state))),
+
+                        TextInput::make('tag_slug')
+                            ->label('Slug')
+                            ->disabled()
+                            ->dehydrated()
+                            ->required()
+                            ->maxLength(255)
+                            ->unique('tags', 'tag_slug'),
+                    ])
+                    ->createOptionUsing(function (array $data): int {
+                        $tag = \App\Models\Tag::create([
+                            'tag_name' => $data['tag_name'],
+                            'tag_slug' => Str::slug($data['tag_name']),
+                        ]);
+
+                        return $tag->id;
+                    })
+                    ->columnSpanFull()
                 ])
                 ->columnSpan([
                     'sm' => 1,
@@ -194,31 +218,27 @@ class FiestaResource extends Resource
                     Section::make()
                     ->schema([
 
-                        DateTimePicker::make('f_start_date')
+                        DatePicker::make('f_start_date')
                         ->label('Start Date')
-                        ->seconds(false)
                         ->required()
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->native(false)
                         ->closeOnDateSelection()
                         ->prefix('Starts')
                         ->maxDate(now()->addYear())
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone'))
                         ->suffixIcon('phosphor-calendar-dot'),
 
-                        DateTimePicker::make('f_end_date')
+                        DatePicker::make('f_end_date')
                         ->label('End Date')
                         ->native(false)
-                        ->seconds(false)
-                        ->displayFormat('F j, Y, g:i A')
+                        ->displayFormat('F j, Y')
                         ->maxDate(now()->addYear())
                         ->closeOnDateSelection()
                         ->prefix('Ends')
                         ->minDate(now())
                         ->columnSpanFull()
-                        ->timezone(config('app.timezone'))
                         ->suffixIcon('phosphor-calendar-dots'),
 
                         ToggleButtons::make('is_featured')
@@ -242,6 +262,7 @@ class FiestaResource extends Resource
                         ])
                         ->dehydrated()
                         ->default('0')
+
                     ])
                     ->columns([
                         'sm' => 1,
@@ -357,6 +378,7 @@ class FiestaResource extends Resource
             'create' => Pages\CreateFiesta::route('/create'),
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
             'view' => Pages\ViewFiesta::route('/{record}'),
+            'comments' => ManageFiestaComments::route('/{record}/comments'),
         ];
     }
 
@@ -366,6 +388,7 @@ class FiestaResource extends Resource
         return $page->generateNavigationItems([
             ViewFiesta::class,
             EditFiesta::class,
+            ManageFiestaComments::class
         ]);
     }
 
@@ -374,106 +397,130 @@ class FiestaResource extends Resource
         return $infolist
             ->schema([
 
-                InfoSec::make()
-                ->schema([
-                    Split::make([
-                        ImageEntry::make('f_images')
-                        ->hiddenlabel()
-                        ->height(130)
-                        ->stacked()
-                        ->circular()
-                        ->overlap(8)
-                        ->limit(3)
-                        ->limitedRemainingText()
-                        ->extraImgAttributes([
-                            'loading' => 'lazy',
-                        ])
-                        ->grow(false),
+                InfoG::make([
 
-                        InfoG::make([
-                            TextEntry::make('f_name')
-                            ->label('')
-                            ->size(TextEntry\TextEntrySize::Large)
-                            ->weight('bold'),
-
-                            TextEntry::make('f_slug')
-                            ->label(''),
-
-                            InfoG::make([
-                                TextEntry::make('barangay.brgy_name')
-                                ->label('Barangay')
-                                ->icon('phosphor-buildings')
-                                ->size(TextEntry\TextEntrySize::Large),
-
-                                TextEntry::make('category.cat_name')
-                                ->label('Category')
-                                ->icon('phosphor-tag')
-                                ->badge()
-                                ->color('primary'),
-                            ])
-                            ->columns([
-                                'sm' => 1,
-                                'md' => 2,
-                                'lg' => 2,
-                            ]),
-                        ])
-                    ])
-                    ->from('md')
-                    ->columnSpanFull(),
-                ])
-                ->columnSpanFull(),
-
-                InfoSec::make()
-                ->schema([
                     InfoG::make([
+                        InfoSec::make()
+                        ->schema([
+                            Split::make([
+                                ImageEntry::make('f_images')
+                                ->hiddenlabel()
+                                ->height(130)
+                                ->stacked()
+                                ->circular()
+                                ->overlap(8)
+                                ->limit(2)
+                                ->limitedRemainingText()
+                                ->extraImgAttributes([
+                                    'loading' => 'lazy',
+                                ])
+                                ->grow(false),
 
-                        IconEntry::make('is_featured')
-                        ->icon(fn (Fiesta $record): string => $record->is_featured ?
-                        'phosphor-check-circle' :
-                        'phosphor-x-circle'
-                        )
-                        ->color(fn (Fiesta $record): string => $record->is_featured ?
-                        'success' :
-                        'danger'
-                        )
-                        ->label('Is Featured?'),
+                                InfoG::make([
+                                    TextEntry::make('f_name')
+                                    ->label('')
+                                    ->size(TextEntry\TextEntrySize::Large)
+                                    ->weight('bold'),
 
-                        IconEntry::make('is_published')
-                        ->icon(fn (Fiesta $record): string => $record->is_published ?
-                        'phosphor-check-circle' :
-                        'phosphor-x-circle'
-                        )
-                        ->color(fn (Fiesta $record): string => $record->is_published ?
-                        'success' :
-                        'danger'
-                        )
-                        ->label('Is Published?'),
+                                    TextEntry::make('f_slug')
+                                    ->label(''),
 
-                        TextEntry::make('f_start_date')
-                        ->label('Start Date')
-                        ->icon('phosphor-calendar-dot')
-                        ->date('F j, Y, g:i a'),
+                                    InfoG::make([
+                                        TextEntry::make('barangay.brgy_name')
+                                        ->label('Barangay')
+                                        ->icon('phosphor-buildings')
+                                        ->size(TextEntry\TextEntrySize::Large),
 
-                        TextEntry::make('f_end_date')
-                        ->label('End Date')
-                        ->icon('phosphor-calendar-dots')
-                        ->date('F j, Y, g:i a'),
+                                        TextEntry::make('category.cat_name')
+                                        ->label('Category')
+                                        ->icon('phosphor-sort-ascending')
+                                        ->badge()
+                                        ->color('primary'),
+                                    ])
+                                    ->columns([
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                    ]),
+                                ])
+                            ])
+                            ->from('md')
+                            ->columnSpanFull(),
+                        ])
+                        ->columnSpanFull(),
 
+                        InfoSec::make()
+                        ->schema([
+                            TextEntry::make('f_description')
+                            ->label('')
+                            ->markdown()
+                        ]),
                     ])
-                    ->columns([
-                        'sm' => 1,
+                    ->columnSpan([
+                        'default' => 1,
+                        'md' => 3,
+                        'lg' => 3
+                    ]),
+
+
+                    InfoG::make([
+                        InfoSec::make()
+                            ->schema([
+                                IconEntry::make('is_featured')
+                                ->icon(fn (Fiesta $record): string => $record->is_featured ?
+                                    'phosphor-check-circle' : 'phosphor-x-circle')
+                                ->color(fn (Fiesta $record): string => $record->is_featured ?
+                                    'success' :'danger')
+                                ->label('Is Featured?'),
+
+                                IconEntry::make('is_published')
+                                ->icon(fn (Fiesta $record): string => $record->is_published ?
+                                    'phosphor-check-circle' : 'phosphor-x-circle' )
+                                ->color(fn (Fiesta $record): string => $record->is_published ?
+                                    'success' : 'danger')
+                                    ->label('Is Published?'),
+
+                                TextEntry::make('f_start_date')
+                                ->label('Start Date')
+                                ->icon('phosphor-calendar-dot')
+                                ->date('F j, Y'),
+
+                                TextEntry::make('f_end_date')
+                                ->label('End Date')
+                                ->icon('phosphor-calendar-dots')
+                                ->date('F j, Y'),
+                        ])
+                        ->columns([
+                            'default' => 1,
+                            'md' => 2,
+                            'lg' => 2
+                        ]),
+
+                        InfoSec::make('Tags')
+                        ->icon('phosphor-tag')
+                        ->schema([
+                            TextEntry::make('tags.tag_name')
+                            ->label('')
+                            ->badge()
+                            ->color('primary')
+                            ->formatStateUsing(fn ($state): string => Str::ucfirst($state))
+                        ])
+                    ])
+                    ->columnSpan([
+                        'default' => 1,
                         'md' => 2,
-                        'lg' => 4,
-                    ])
-                ]),
+                        'lg' => 2
+                    ]),
 
-
-                InfoSec::make()
-                ->schema([
-                    TextEntry::make('f_description')
-                    ->label('')
-                    ->markdown()
                 ])
+                ->columns([
+                    'default' => 1,
+                    'md' => 5,
+                    'lg' => 5
+                ])
+                ->columnSpanFull()
+
+
 
 
             ]);

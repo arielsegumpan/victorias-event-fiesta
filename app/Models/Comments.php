@@ -11,11 +11,12 @@ class Comments extends Model
         'user_id',
         'fiesta_id',
         'comment',
-        'comment_imgs',
+        'is_approved',
     ];
 
     protected $casts = [
         'comment_imgs' => 'array',
+        'is_approved' => 'boolean',
     ];
 
     public function fiesta() : BelongsTo
