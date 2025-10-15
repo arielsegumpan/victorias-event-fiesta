@@ -171,8 +171,10 @@ class FiestaResource extends Resource
                     ->disableToolbarButtons([
                         'codeBlock',
                     ])
-                    ->maxLength(65535),
-
+                    ->maxLength(65535)
+                    ->fileAttachmentsDisk('local')
+                    ->fileAttachmentsDirectory('fiest_imgs')
+                    ->fileAttachmentsVisibility('public'),
 
                     Select::make('tags')
                     ->label('Tags')

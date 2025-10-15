@@ -11,9 +11,9 @@ class BarangayPage extends Component
     #[Computed]
     public function barangays()
     {
-        return Barangay::where('is_published', true)->get();
+        return Barangay::select(['brgy_name', 'brgy_slug', 'brgy_logo', 'brgy_img_gallery', 'brgy_desc', 'brgy_address', 'brgy_contact', 'brgy_email', 'brgy_facebook','brgy_twitter','brgy_instagram','brgy_youtube', 'brgy_tiktok'])->where('is_published', true)->get();
     }
-    
+
     public function render()
     {
         return view('livewire.pages.barangay-page');

@@ -3,7 +3,7 @@
     <header class="z-50 flex flex-wrap w-full bg-white border-b border-gray-200 md:justify-start md:flex-nowrap dark:bg-neutral-800 dark:border-neutral-700">
         <nav class="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between gap-x-1">
-            <a class="flex-none text-xl font-semibold text-black focus:outline-hidden focus:opacity-80 dark:text-white" href="{{ route('home.page') }}" aria-label="Brand">
+            <a class="flex-none text-xl font-semibold text-black focus:outline-hidden focus:opacity-80 dark:text-white" href="{{ route('home.page') }}" aria-label="{{ config('app.name') }}">
                 <img src="{{ asset('imgs/vfs.png') }}" class="h-auto w-14" alt="{{ config('app.name') }}">
             </a>
 

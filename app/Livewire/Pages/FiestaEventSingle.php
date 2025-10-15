@@ -11,8 +11,8 @@ use Livewire\Attributes\Computed;
 #[Lazy]
 class FiestaEventSingle extends Component
 {
-    public $fiestaId;
-    public $userId;
+    protected $fiestaId;
+    protected $userId;
 
     public function mount($f_slug)
     {
