@@ -24,7 +24,7 @@ class Fiesta extends Model implements Eventable
         'f_start_date',
         'f_end_date',
         'is_featured',
-        'is_approved',
+        'is_published',
     ];
 
     protected $casts = [
@@ -32,7 +32,7 @@ class Fiesta extends Model implements Eventable
         'f_location' => 'array',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
-        'is_approved' => 'boolean',
+        'is_published' => 'boolean',
         'tags' => 'array',
         'f_start_date' => 'date',
         'f_end_date' => 'date',

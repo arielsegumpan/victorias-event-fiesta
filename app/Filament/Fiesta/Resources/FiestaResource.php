@@ -281,8 +281,9 @@ class FiestaResource extends Resource
                 ->label('Fiesta Name')
                 ->searchable()
                 ->sortable()
-                ->size(TextColumn\TextColumnSize::Large)
-                ->description(fn (Fiesta $record) => $record->f_slug),
+                ->weight('bold')
+                ->description(fn (Fiesta $record) => Str::limit($record->f_slug, 30, '...'))
+                ->limit(30),
 
                 TextColumn::make('barangay.brgy_name')
                 ->label('Barangay')
@@ -299,12 +300,20 @@ class FiestaResource extends Resource
                 TextColumn::make('f_start_date')
                 ->label('Start Date')
                 ->date('F j, Y')
-                ->sortable(),
+                ->sortable()
+                ->icon('phosphor-calendar-dot')
+                ->badge()
+                ->color('success'),
 
                 TextColumn::make('f_end_date')
                 ->label('End Date')
                 ->date('F j, Y')
-                ->sortable(),
+                ->sortable()
+                ->icon('phosphor-calendar-dots')
+                ->badge()
+                ->color('danger'),
+
+
             ])
             ->filters([
                 //
@@ -328,25 +337,8 @@ class FiestaResource extends Resource
                 ->icon('heroicon-m-plus')
                 ->label(__('New Fiesta')),
             ])
-            ->emptyStateIcon('phosphor-confetti')
+            ->emptyStateIcon('heroicon-o-sparkles')
             ->emptyStateHeading('No fiestas are created')
-            ->modifyQueryUsing(function (Builder $query) {
-                $user = auth()->user();
-
-                // Check if user has barangay captain role
-                if ($user->hasAnyRole(['barangay captain', 'barangay_captain', 'brgy captain', 'brgy_captain', 'captain'])) {
-                    // Get the barangay IDs where this user is a captain
-                    $barangayIds = \App\Models\BarangayCaptain::where('user_id', $user->id)
-                        ->pluck('barangay_id')
-                        ->toArray();
-
-                    // Filter fiestas to only show those from the captain's barangay(s)
-                    return $query->whereIn('barangay_id', $barangayIds);
-                }
-
-                // Return unmodified query for other users (admins can see all)
-                return $query;
-            })
             ->defaultSort('created_at', 'desc');
     }
 

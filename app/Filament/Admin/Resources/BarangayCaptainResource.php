@@ -57,11 +57,6 @@ class BarangayCaptainResource extends Resource
                                 return $query->whereNotIn('id', $assignedBarangayIds);
                             }
                         )
-                        // ->relationship(
-                        //     name: 'barangay',
-                        //     titleAttribute: 'brgy_name',
-                        //     modifyQueryUsing: fn ($query, $record) => $record ? $query->where('id', '!=', $record->barangay_id) : $query
-                        // )
                         ->native(false)
                         ->required()
                         ->preload()
@@ -202,7 +197,7 @@ class BarangayCaptainResource extends Resource
                                 'md' => 5,
                                 'lg' => 5
                             ])
-                        ]),
+                    ]),
 
                     Select::make('user_id')
                     ->label('Kapitan')

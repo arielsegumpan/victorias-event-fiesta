@@ -310,8 +310,9 @@ class FiestaResource extends Resource
                 ->label('Fiesta Name')
                 ->searchable()
                 ->sortable()
-                ->size(TextColumn\TextColumnSize::Large)
-                ->description(fn (Fiesta $record) => $record->f_slug),
+                ->weight('bold')
+                ->description(fn (Fiesta $record) => Str::limit($record->f_slug, 30, '...'))
+                ->limit(30),
 
                 TextColumn::make('barangay.brgy_name')
                 ->label('Barangay')
@@ -328,12 +329,18 @@ class FiestaResource extends Resource
                 TextColumn::make('f_start_date')
                 ->label('Start Date')
                 ->date('F j, Y')
-                ->sortable(),
+                ->sortable()
+                ->icon('phosphor-calendar-dot')
+                ->badge()
+                ->color('success'),
 
                 TextColumn::make('f_end_date')
                 ->label('End Date')
                 ->date('F j, Y')
-                ->sortable(),
+                ->sortable()
+                ->icon('phosphor-calendar-dots')
+                ->badge()
+                ->color('danger'),
 
 
             ])

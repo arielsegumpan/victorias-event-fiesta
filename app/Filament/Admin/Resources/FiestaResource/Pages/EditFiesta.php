@@ -43,6 +43,10 @@ class EditFiesta extends EditRecord
     {
         $data['f_name'] = Str::title($data['f_name']);
         $data['f_slug'] = Str::slug($data['f_name']);
+        $data['is_published'] = $data['is_published'];
+
+
+        // dd($data);
         return $data;
     }
 }

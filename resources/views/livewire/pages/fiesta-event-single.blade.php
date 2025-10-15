@@ -201,7 +201,7 @@
                         <!--END OF MODAL -->
 
                         <div class="text-gray-600 max-w-none dark:text-neutral-200">
-                            {!! $this->fiesta->f_description !!}
+                            {!! str( $this->fiesta->f_description)->sanitizeHtml() !!}
                         </div>
 
                         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-y-5 lg:gap-y-0">
