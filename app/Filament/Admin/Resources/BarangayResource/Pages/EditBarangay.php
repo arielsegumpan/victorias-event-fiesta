@@ -28,14 +28,9 @@ class EditBarangay extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        // // Store captain ID separately
-        // $this->captainUserId = $data['current_captain_user_id'] ?? null;
-        // unset($data['current_captain_user_id']);
-
-
         $data['brgy_name'] = Str::title($data['brgy_name']);
         $data['brgy_slug'] = Str::slug($data['brgy_slug']);
-
+        dd($data);
         return $data;
     }
 

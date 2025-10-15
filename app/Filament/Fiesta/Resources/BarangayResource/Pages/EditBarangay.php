@@ -21,4 +21,11 @@ class EditBarangay extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['created_by'] = auth()->id();
+        return $data;
+    }
+
 }

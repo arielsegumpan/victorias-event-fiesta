@@ -189,7 +189,6 @@ class BarangayResource extends Resource
                     ])
                     ->contained(false),
 
-
                 ])
                 ->columnSpan([
                     'sm' => 1,
