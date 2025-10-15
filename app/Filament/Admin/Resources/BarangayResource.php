@@ -200,6 +200,46 @@ class BarangayResource extends Resource
                 Group::make([
                     Section::make()
                     ->schema([
+                        Section::make('Barangay Captain Assignment')
+                        ->schema([
+                            Select::make('barangay_captain_id')
+                            ->label('Assign Barangay Captain')
+                            ->options(function () {
+                                return \App\Models\User::whereHas('roles', function ($query) {
+                                    $query->whereIn('name', [
+                                        'barangay captain',
+                                        'barangay_captain',
+                                        'brgy captain',
+                                        'brgy_captain',
+                                        'captain',
+                                    ]);
+                                })
+                                ->pluck('name', 'id');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->native(false)
+                            ->required()
+                            ->afterStateHydrated(function (Select $component, $state, $record) {
+                                // Load current captain when editing
+                                if ($record) {
+                                    $currentCaptain = $record->currentCaptain;
+                                    if ($currentCaptain) {
+                                        $component->state($currentCaptain->user_id);
+                                    }
+                                }
+                            })
+                            ->dehydrated(false)
+                            ->helperText(fn ($record) => $record && $record->currentCaptain
+                                ? 'Current captain since: ' . $record->currentCaptain->term_start->format('M d, Y')
+                                : null
+                            ),
+                        ])
+                    ]),
+
+
+                    Section::make()
+                    ->schema([
 
                         Fieldset::make('Barangay Logo')
                         ->schema([
@@ -238,43 +278,7 @@ class BarangayResource extends Resource
 
                     ]),
 
-                    Section::make()
-                    ->schema([
-                        Section::make('Barangay Captain Assignment')
-                        ->schema([
-                            Select::make('barangay_captain_id')
-                            ->label('Assign Barangay Captain')
-                            ->options(function () {
-                                return \App\Models\User::whereHas('roles', function ($query) {
-                                    $query->whereIn('name', [
-                                        'barangay captain',
-                                        'barangay_captain',
-                                        'brgy captain',
-                                        'brgy_captain',
-                                        'captain',
-                                    ]);
-                                })
-                                ->pluck('name', 'id');
-                            })
-                            ->searchable()
-                            ->preload()
-                            ->native(false)
-                            ->afterStateHydrated(function (Select $component, $state, $record) {
-                                // Load current captain when editing
-                                if ($record) {
-                                    $currentCaptain = $record->currentCaptain;
-                                    if ($currentCaptain) {
-                                        $component->state($currentCaptain->user_id);
-                                    }
-                                }
-                            })
-                            ->dehydrated(false)
-                            ->helperText(fn ($record) => $record && $record->currentCaptain
-                                ? 'Current captain since: ' . $record->currentCaptain->term_start->format('M d, Y')
-                                : null
-                            ),
-                        ])
-                    ])
+
                 ])
                 ->columnSpan([
                     'sm' => 1,
@@ -406,91 +410,119 @@ class BarangayResource extends Resource
     {
         return $infolist
             ->schema([
+                InfoG::make([
+                    InfoSec::make()
+                    ->schema([
 
-                InfoSec::make()
-                ->schema([
+                        Split::make([
+                            InfoG::make([
+                                ImageEntry::make('brgy_logo')
+                                ->hiddenlabel()
+                                ->size(150)
+                                ->square()
+                                ->placeholder('No Image')
+                                ->extraImgAttributes([
+                                    'alt' => 'Logo',
+                                    'loading' => 'lazy',
+                                ]),
 
-                    Split::make([
-                        InfoG::make([
-                            ImageEntry::make('brgy_logo')
-                            ->hiddenlabel()
-                            ->size(150)
-                            ->square()
-                            ->placeholder('No Image')
-                            ->extraImgAttributes([
-                                'alt' => 'Logo',
-                                'loading' => 'lazy',
-                            ]),
-
-                            ImageEntry::make('brgy_img_gallery')
-                            ->hiddenlabel()
-                            ->height(50)
-                            ->stacked()
-                            ->square()
-                            ->overlap(1)
-                            ->limit(3)
-                            ->limitedRemainingText()
-                            ->extraImgAttributes([
-                                'loading' => 'lazy',
+                                ImageEntry::make('brgy_img_gallery')
+                                ->hiddenlabel()
+                                ->height(50)
+                                ->stacked()
+                                ->square()
+                                ->overlap(1)
+                                ->limit(3)
+                                ->limitedRemainingText()
+                                ->extraImgAttributes([
+                                    'loading' => 'lazy',
+                                ])
                             ])
-                        ])
-                        ->grow(false),
-
-
-                        InfoG::make([
-                            TextEntry::make('brgy_name')
-                            ->label('')
-                            ->color('primary')
-                            ->size(TextEntry\TextEntrySize::Large)
-                            ->weight(FontWeight::Bold)
-                            ->formatStateUsing(fn (string $state): string => Str::title($state)),
-
-                            TextEntry::make('brgy_slug')
-                            ->label('Slug'),
+                            ->grow(false),
 
                             InfoG::make([
-                                IconEntry::make('is_published')
-                                ->icon(fn (string $state): string => match ($state) {
-                                    '1' => 'phosphor-check-circle',
-                                    '0' => 'phosphor-x-circle',
-                                })
-                                ->label('Is Published?')
-                                ->boolean()
-                                ->color(fn (string $state): string => match ($state) {
-                                    '1' => 'success',
-                                    '0' => 'danger',
-                                })
-                                ->tooltip(fn (string $state): string => match ($state) {
-                                    '1' => 'Yes',
-                                    '0' => 'No',
-                                }),
+                                TextEntry::make('brgy_name')
+                                ->label('')
+                                ->color('primary')
+                                ->size(TextEntry\TextEntrySize::Large)
+                                ->weight(FontWeight::Bold)
+                                ->formatStateUsing(fn (string $state): string => Str::title($state)),
 
-                                IconEntry::make('is_featured')
-                                ->icon(fn (string $state): string => match ($state) {
-                                    '1' => 'phosphor-check-circle',
-                                    '0' => 'phosphor-x-circle',
-                                })
-                                ->label('Is Featured?')
-                                ->boolean()
-                                ->color(fn (string $state): string => match ($state) {
-                                    '1' => 'success',
-                                    '0' => 'danger',
-                                })
-                                ->tooltip(fn (string $state): string => match ($state) {
-                                    '1' => 'Yes',
-                                    '0' => 'No',
-                                }),
-                            ])
-                            ->columns([
-                                'sm' => 1,
-                                'md' => 2,
-                                'lg' => 2,
+                                TextEntry::make('brgy_slug')
+                                ->label('Slug'),
+
+                                InfoG::make([
+                                    IconEntry::make('is_published')
+                                    ->icon(fn (string $state): string => match ($state) {
+                                        '1' => 'phosphor-check-circle',
+                                        '0' => 'phosphor-x-circle',
+                                    })
+                                    ->label('Is Published?')
+                                    ->boolean()
+                                    ->color(fn (string $state): string => match ($state) {
+                                        '1' => 'success',
+                                        '0' => 'danger',
+                                    })
+                                    ->tooltip(fn (string $state): string => match ($state) {
+                                        '1' => 'Yes',
+                                        '0' => 'No',
+                                    }),
+
+                                    IconEntry::make('is_featured')
+                                    ->icon(fn (string $state): string => match ($state) {
+                                        '1' => 'phosphor-check-circle',
+                                        '0' => 'phosphor-x-circle',
+                                    })
+                                    ->label('Is Featured?')
+                                    ->boolean()
+                                    ->color(fn (string $state): string => match ($state) {
+                                        '1' => 'success',
+                                        '0' => 'danger',
+                                    })
+                                    ->tooltip(fn (string $state): string => match ($state) {
+                                        '1' => 'Yes',
+                                        '0' => 'No',
+                                    }),
+                                ])
+                                ->columns([
+                                    'sm' => 1,
+                                    'md' => 2,
+                                    'lg' => 2,
+                                ])
                             ])
                         ])
-                    ])
-                    ->from('md')
+                        ->from('md')
 
-                ]),
+                    ])
+                    ->columnSpan(1),
+
+                    InfoSec::make()
+                    ->schema([
+                        TextEntry::make('brgy_address')
+                        ->label('Address')
+                        ->icon('phosphor-map-pin-line')
+                        ->formatStateUsing(fn (string $state): string => Str::title($state)),
+
+                        TextEntry::make('brgy_contact')
+                        ->label('Contact')
+                        ->icon('phosphor-phone-call')
+                        ->formatStateUsing(fn (string $state): string => Str::title($state)),
+
+                        TextEntry::make('brgy_email')
+                        ->label('Email')
+                        ->icon('phosphor-envelope-simple'),
+
+
+                    ])
+                    ->columnSpan(1)
+
+                ])
+                ->columns([
+                    'default' => 1,
+                    'md' => 2,
+                    'lg' => 2
+                ])
+                ->columnSpanFull(),
 
                 InfoSec::make()
                 ->schema([
@@ -498,9 +530,6 @@ class BarangayResource extends Resource
                     ->label('')
                     ->markdown()
                 ])
-
-
-
         ]);
 
     }

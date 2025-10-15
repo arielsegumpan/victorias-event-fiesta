@@ -37,7 +37,7 @@ class AuthPanelProvider extends PanelProvider
             ->registration(Register::class)
             ->font('Montserrat')
             ->brandLogo(asset('imgs/vfs.png'))
-            ->brandLogoHeight('3rem')
+            ->brandLogoHeight('6rem')
             ->favicon(asset('imgs/vfs.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
