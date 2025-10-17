@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Models\Contact as ContactModel;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -57,7 +58,7 @@ class Contact extends Component
         ];
 
         // Create contact record
-        Contact::create($sanitizedData);
+        ContactModel::create($sanitizedData);
 
         // Increment rate limiter
         RateLimiter::hit($key, 3600); // 1 hour decay
