@@ -197,22 +197,23 @@
 
         </div>
         <!-- End Grid -->
-
+        @if($this->displayFiestas->count() > 0)
         <!-- Card -->
         <div class="text-center">
             <div class="inline-block bg-white border border-gray-200 rounded-md shadow-2xs dark:bg-neutral-900 dark:border-neutral-800">
             <div class="flex items-center px-4 py-3 gap-x-2">
                 <p class="text-gray-600 dark:text-neutral-400">
-                Want to read more?
+                    {{ __('Want to read more?') }}
                 </p>
                 <a class="inline-flex items-center gap-x-1.5 text-orange-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-orange-500" href="{{ route('fiesta-eventos.page') }}">
-                Go here
+                    {{ __('Go here') }}
                 <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </a>
             </div>
             </div>
         </div>
         <!-- End Card -->
+        @endif
     </div>
     <!-- End Card Blog -->
 

@@ -6,10 +6,11 @@
                 {{ __('Barangays') }}
             </h2>
 
-            <p class="mt-3 text-gray-600 dark:text-neutral-400">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos reiciendis accusamus dolores tenetur harum
-                laudantium!
-            </p>
+            <div class="max-full max-auto flex flex-row justify-center item-center md:px-[5rem] lg:px-[9rem]">
+                <p class="mt-3 text-gray-600 dark:text-neutral-400 text-center">
+                    {{ __('This section provides a detailed overview of all barangays within the jurisdiction that are currently operational and actively participating in local governance, community programs, and public services.') }}
+                </p>
+            </div>
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-6 md:gap-10 pt-9">
@@ -81,7 +82,7 @@
             </div>
             <!-- End Card -->
             @empty
-            <span class="mx-auto text-center">No barangays</span>
+            <span class="mx-auto text-center text text-gray-600 dark:text-neutral-400">{{ __('No barangays found') }}</span>
             @endforelse
 
 

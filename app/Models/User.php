@@ -127,5 +127,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Fiesta::class, 'created_by');
     }
 
+    public function sents() : HasMany
+    {
+        return $this->hasMany(Sent::class, 'user_id');
+    }
 
 }
