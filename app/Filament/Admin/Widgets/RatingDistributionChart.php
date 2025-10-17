@@ -35,11 +35,12 @@ class RatingDistributionChart extends ChartWidget
                         'rgb(132, 204, 22)',
                         'rgb(34, 197, 94)',
                     ],
+                    'borderRadius' => 150,
+                    'borderWidth' => 0,
+                    'maxBarThickness' => 30
                 ],
             ],
             'labels' => ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
-            'maxBarThickness' => 15,
-            'borderRadius' => 30
         ];
     }
 
