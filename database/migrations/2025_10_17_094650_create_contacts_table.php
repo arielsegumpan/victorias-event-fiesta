@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('phone');
             $table->text('message');
             $table->boolean('is_replied')->default(0);
+            $table->index('email');
+            $table->index('is_replied');
+            $table->index('created_at');
+            $table->index(['is_replied', 'created_at']);
             $table->timestamps();
         });
     }

@@ -132,4 +132,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Sent::class, 'user_id');
     }
 
+    public function contacts() : HasMany
+    {
+        return $this->hasMany(Contact::class, 'user_id');
+    }
+
 }

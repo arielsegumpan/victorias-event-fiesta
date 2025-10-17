@@ -3,13 +3,28 @@
     <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
     <div class="max-w-xl mx-auto">
         <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
-            Contact us
-        </h1>
-        <p class="mt-1 text-gray-600 dark:text-neutral-400">
-            We'd love to talk about how we can help you.
-        </p>
+            <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
+                Contact us
+            </h1>
+            <p class="mt-1 text-gray-600 dark:text-neutral-400">
+                We'd love to talk about how we can help you.
+            </p>
         </div>
+
+        @if($submitted)
+            <!-- Success Message -->
+            <div class="p-4 mb-6 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="font-medium">Success!</span> Your message has been sent successfully. We'll get back to you soon.
+                </div>
+                {{-- <button wire:click="resetForm" type="button" class="mt-3 text-sm font-medium text-green-800 underline hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                    Send another message
+                </button> --}}
+            </div>
+        @endif
     </div>
 
     <div class="max-w-lg mx-auto mt-12">
@@ -19,18 +34,34 @@
             Fill in the form
         </h2>
 
-        <form>
+        <form wire:submit.prevent="submit">
             <div class="grid gap-4 lg:gap-6">
             <!-- Grid -->
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
                 <div>
-                <label for="hs-firstname-contacts-1" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">First Name</label>
-                <input type="text" name="hs-firstname-contacts-1" id="hs-firstname-contacts-1" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                <label for="firstName" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">First Name <span class="text-red-500">*</span></label>
+                <input
+                    type="text"
+                    wire:model.blur="firstName"
+                    name="firstName"
+                    id="firstName"
+                    class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    @error('firstName')
+                        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                <label for="hs-lastname-contacts-1" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Last Name</label>
-                <input type="text" name="hs-lastname-contacts-1" id="hs-lastname-contacts-1" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                <label for="lastName" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Last Name <span class="text-red-500">*</span></label>
+                <input
+                    type="text"
+                    wire:model.blur="lastName"
+                    name="lastName"
+                    id="lastName"
+                    class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    @error('lastName')
+                        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
             <!-- End Grid -->
@@ -38,26 +69,71 @@
             <!-- Grid -->
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
                 <div>
-                <label for="hs-email-contacts-1" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Email</label>
-                <input type="email" name="hs-email-contacts-1" id="hs-email-contacts-1" autocomplete="email" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Email <span class="text-red-500">*</span></label>
+                <input
+                    type="email"
+                    wire:model.blur="email"
+                    name="email"
+                    id="email"
+                    autocomplete="email"
+                    class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    @error('email')
+                        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                <label for="hs-phone-number-1" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Phone Number</label>
-                <input type="text" name="hs-phone-number-1" id="hs-phone-number-1" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                <label for="phone" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Phone Number <span class="text-red-500">*</span></label>
+                <input
+                    type="text"
+                    wire:model.blur="phone"
+                    name="phone"
+                    id="phone"
+                    class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    @error('phone')
+                        <p class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
             <!-- End Grid -->
 
             <div>
-                <label for="hs-about-contacts-1" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Details</label>
-                <textarea id="hs-about-contacts-1" name="hs-about-contacts-1" rows="4" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"></textarea>
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">Details <span class="text-red-500">*</span></label>
+                <textarea
+                    id="message"
+                    wire:model.blur="message"
+                    name="message"
+                    rows="4"
+                    placeholder="Tell us about your inquiry..."
+                    class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-md sm:text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"></textarea>
+
+                <div class="flex justify-between mt-1">
+                    @error('message')
+                        <p class="text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @else
+                        <p class="text-xs text-gray-500 dark:text-neutral-500">Minimum 10 characters</p>
+                    @enderror
+                        <p class="text-xs text-gray-500 dark:text-neutral-500">{{ strlen($message) }}/1000</p>
+                </div>
             </div>
             </div>
             <!-- End Grid -->
 
             <div class="grid mt-6">
-            <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md gap-x-2 hover:bg-orange-700 focus:outline-hidden focus:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none">Send inquiry</button>
+                <button
+                    type="submit"
+                    wire:loading.attr="disabled"
+                    wire:loading.class="opacity-50 cursor-not-allowed"
+                    class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md gap-x-2 hover:bg-orange-700 focus:outline-hidden focus:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <span wire:loading.remove wire:target="submit">Send inquiry</span>
+                    <span wire:loading wire:target="submit" class="flex items-center gap-2">
+                        <svg class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                    </span>
+                </button>
             </div>
 
             <div class="mt-3 text-center">
