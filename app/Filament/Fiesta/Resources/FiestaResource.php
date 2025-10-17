@@ -52,6 +52,21 @@ class FiestaResource extends Resource
 
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
+    protected static ?string $navigationBadgeTooltip = 'The number of fiestas created';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::where('created_by', auth()->id())->count();
+        return $count > 0 ? (string) $count : null;
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 0 ? 'success' : 'primary';
+    }
+
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -340,7 +355,25 @@ class FiestaResource extends Resource
             ])
             ->emptyStateIcon('heroicon-o-sparkles')
             ->emptyStateHeading('No fiestas are created')
-            ->defaultSort('created_at', 'desc');
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = auth()->user();
+
+                // Check if user has captain role
+                if ($user && $user->hasAnyRole([
+                    'barangay captain',
+                    'barangay_captain',
+                    'brgy captain',
+                    'brgy_captain',
+                    'captain'
+                ])) {
+                    // Show only fiestas created by this user
+                    $query->where('created_by', $user->id);
+                }
+
+                return $query;
+            })
+            ->defaultSort('created_at', 'desc')
+            ;
     }
 
 

@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use DateTime;
+use Carbon\Carbon;
+use App\Observers\FiestaObserver;
 use Guava\Calendar\Contracts\Eventable;
 use Illuminate\Database\Eloquent\Model;
 use Guava\Calendar\ValueObjects\CalendarEvent;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[ObservedBy([FiestaObserver::class])]
 class Fiesta extends Model implements Eventable
 {
     protected $fillable = [

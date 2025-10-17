@@ -6,25 +6,32 @@ use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use App\Models\Barangay;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use App\Models\BarangayCaptain;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Resources\Pages\Page;
 use Spatie\Permission\Models\Role;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Split;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\UserResource\Pages;
@@ -102,6 +109,7 @@ class UserResource extends Resource
                         Section::make('Barangay Captain Assignment')
                         ->description('Assign this user to a barangay as captain')
                         ->schema([
+
                             Select::make('barangay_id')
                             ->label('Barangay')
                             ->relationship(name: 'currentBarangay', titleAttribute: 'brgy_name')
@@ -110,15 +118,292 @@ class UserResource extends Resource
                             ->preload()
                             ->optionsLimit(10)
                             ->native(false)
-                            ->options(function () {
-                                return Barangay::all()->pluck('brgy_name', 'id');
+                            ->options(function ($record) {
+                                // Get all barangays
+                                $query = Barangay::query();
+
+                                // If editing, get current user's barangay ID to allow it
+                                $currentBarangayId = null;
+                                if ($record && $record->currentBarangay) {
+                                    $currentBarangayId = $record->currentBarangay->barangay_id;
+                                }
+
+                                // Get IDs of barangays that already have active captains
+                                $occupiedBarangayIds = BarangayCaptain::where(function ($query) {
+                                    $query->whereNull('term_end')
+                                        ->orWhere('term_end', '>=', now());
+                                })
+                                ->when($currentBarangayId, function ($query) use ($currentBarangayId) {
+                                    // Exclude current user's barangay from the occupied list
+                                    $query->where('barangay_id', '!=', $currentBarangayId);
+                                })
+                                ->pluck('barangay_id')
+                                ->toArray();
+
+                                // Return barangays that don't have active captains
+                                return $query->whereNotIn('id', $occupiedBarangayIds)
+                                            ->pluck('brgy_name', 'id');
                             })
                             ->required()
                             ->afterStateHydrated(function (Select $component, $state, $record) {
                                 if ($record && $record->currentBarangay) {
                                     $component->state($record->currentBarangay->barangay_id);
                                 }
-                            }),
+                            })
+                            ->createOptionForm([
+                                Group::make([
+                                    Section::make()
+                                    ->schema([
+
+                                        Tabs::make('Tabs')
+                                        ->tabs([
+                                            Tabs\Tab::make('Brgy. Details')
+                                                ->icon('phosphor-info')
+                                                ->schema([
+                                                    TextInput::make('brgy_name')
+                                                    ->label('Barangay')
+                                                    ->required()
+                                                    ->maxLength(255)
+                                                    ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true)
+                                                    ->live(onBlur: true)
+                                                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('brgy_slug', Str::slug($state))),
+
+                                                    TextInput::make('brgy_slug')
+                                                    ->label('Slug')
+                                                    ->disabled()
+                                                    ->dehydrated()
+                                                    ->required()
+                                                    ->maxLength(255)
+                                                    ->unique(Barangay::class, 'brgy_slug', ignoreRecord: true),
+
+                                                    Group::make([
+                                                        ToggleButtons::make('is_published')
+                                                        ->label('Is Publish?')
+                                                        ->inline()
+                                                        ->required()
+                                                        ->options([
+                                                            '1' => 'Yes',
+                                                            '0' => 'No',
+                                                        ])
+                                                        ->icons([
+                                                            '1' => 'phosphor-check-circle',
+                                                            '0' => 'phosphor-x-circle',
+                                                        ])
+                                                        ->colors([
+                                                            '1' => 'primary',
+                                                            '0' => 'danger',
+                                                        ])
+                                                        ->dehydrated()
+                                                        ->default('1'),
+
+                                                        ToggleButtons::make('is_featured')
+                                                        ->label('Is Featured?')
+                                                        ->inline()
+                                                        ->required()
+                                                        ->options([
+                                                            '1' => 'Yes',
+                                                            '0' => 'No',
+                                                        ])
+                                                        ->icons([
+                                                            '1' => 'phosphor-check-circle',
+                                                            '0' => 'phosphor-x-circle',
+                                                        ])
+                                                        ->colors([
+                                                            '1' => 'primary',
+                                                            '0' => 'danger',
+                                                        ])
+                                                        ->dehydrated()
+                                                        ->default('1'),
+                                                    ])
+                                                    ->columns([
+                                                        'sm' => 1,
+                                                        'md' => 2,
+                                                        'lg' => 2,
+                                                    ]),
+
+                                                    RichEditor::make('brgy_desc')
+                                                    ->label('Description')
+                                                    ->maxLength(65535)
+                                                    ->columnSpanFull()
+                                                ]),
+                                            Tabs\Tab::make('Address')
+                                                ->icon('phosphor-map-pin')
+                                                ->schema([
+                                                    TextInput::make('brgy_address')
+                                                    ->label('Address')
+                                                    ->maxlength(255)
+                                                    ->required(),
+
+                                                    TextInput::make('brgy_contact')
+                                                    ->label('Contact')
+                                                    ->required(),
+
+                                                    TextInput::make('brgy_email')
+                                                    ->label('Email')
+                                                    ->email()
+                                                    ->required(),
+
+
+                                                ]),
+                                            Tabs\Tab::make('Socmeds')
+                                                ->icon('phosphor-globe-hemisphere-east')
+                                                ->schema([
+                                                    TextInput::make('brgy_facebook')
+                                                    ->label('Facebook')
+                                                    ->maxlength(255)
+                                                    ->url()
+                                                    ->prefixIcon('phosphor-facebook-logo')
+                                                    ->nullable(),
+
+                                                    TextInput::make('brgy_twitter')
+                                                    ->label('Twitter')
+                                                    ->maxlength(255)
+                                                    ->url()
+                                                    ->prefixIcon('phosphor-twitter-logo')
+                                                    ->nullable(),
+
+                                                    TextInput::make('brgy_instagram')
+                                                    ->label('Instagram')
+                                                    ->maxlength(255)
+                                                    ->url()
+                                                    ->prefixIcon('phosphor-instagram-logo')
+                                                    ->nullable(),
+
+                                                    TextInput::make('brgy_youtube')
+                                                    ->label('Youtube')
+                                                    ->maxlength(255)
+                                                    ->url()
+                                                    ->prefixIcon('phosphor-youtube-logo'),
+
+                                                    TextInput::make('brgy_tiktok')
+                                                    ->label('Tiktok')
+                                                    ->maxlength(255)
+                                                    ->url()
+                                                    ->prefixIcon('phosphor-tiktok-logo')
+                                                    ->nullable(),
+                                                ]),
+                                        ])
+                                        ->contained(false),
+
+                                    ])
+                                    ->columnSpan([
+                                        'sm' => 1,
+                                        'md' => 3,
+                                        'lg' => 3,
+                                    ]),
+
+                                    Group::make([
+                                        Section::make()
+                                        ->schema([
+                                            Section::make('Barangay Captain Assignment')
+                                            ->schema([
+                                                Select::make('barangay_captain_id')
+                                                ->label('Assign Barangay Captain')
+                                                ->options(function () {
+                                                    return \App\Models\User::whereHas('roles', function ($query) {
+                                                        $query->whereIn('name', [
+                                                            'barangay captain',
+                                                            'barangay_captain',
+                                                            'brgy captain',
+                                                            'brgy_captain',
+                                                            'captain',
+                                                        ]);
+                                                    })
+                                                    ->pluck('name', 'id');
+                                                })
+                                                ->searchable()
+                                                ->preload()
+                                                ->native(false)
+                                                ->required()
+                                                ->afterStateHydrated(function (Select $component, $state, $record) {
+                                                    if ($record && $record->currentCaptain) {
+                                                        $component->state($record->currentCaptain->user_id);
+                                                    }
+                                                })
+                                                ->dehydrated(false)
+                                                ->helperText(fn ($record) => $record && $record->currentCaptain
+                                                    ? 'Current captain since: ' . $record->currentCaptain->term_start->format('M d, Y')
+                                                    : null
+                                                ),
+                                            ])
+                                        ]),
+
+
+                                        Section::make()
+                                        ->schema([
+
+                                            Fieldset::make('Barangay Logo')
+                                            ->schema([
+                                                FileUpload::make('brgy_logo')
+                                                ->hiddenlabel()
+                                                ->image()
+                                                ->required()
+                                                ->maxSize(1024)
+                                                ->imageEditor()
+                                                ->imageEditorAspectRatios([
+                                                    null,
+                                                    '16:9',
+                                                    '4:3',
+                                                    '1:1',
+                                                ])
+                                                ->columnSpanFull(),
+                                            ]),
+
+                                            Fieldset::make('Barangay Image Gallery')
+                                            ->schema([
+                                                FileUpload::make('brgy_img_gallery')
+                                                ->hiddenlabel()
+                                                ->multiple()
+                                                ->image()
+                                                ->maxSize('2048')
+                                                ->maxParallelUploads(5)
+                                                ->imageEditor()
+                                                ->imageEditorAspectRatios([
+                                                    null,
+                                                    '16:9',
+                                                    '4:3',
+                                                    '1:1',
+                                                ])
+                                                ->columnSpanFull(),
+                                            ]),
+
+                                        ]),
+
+
+                                    ])
+                                    ->columnSpan([
+                                        'sm' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                    ]),
+
+                                ])
+                                ->columns([
+                                    'sm' => 1,
+                                    'md' => 5,
+                                    'lg' => 5,
+                                ])
+                            ])
+                            ->columnSpanFull(),
+
+
+                            // Select::make('barangay_id')
+                            // ->label('Barangay')
+                            // ->relationship(name: 'currentBarangay', titleAttribute: 'brgy_name')
+                            // ->getOptionLabelFromRecordUsing(fn ($record) => $record->barangay->brgy_name ?? 'N/A')
+                            // ->searchable()
+                            // ->preload()
+                            // ->optionsLimit(10)
+                            // ->native(false)
+                            // ->options(function () {
+                            //     return Barangay::all()->pluck('brgy_name', 'id');
+                            // })
+                            // ->required()
+                            // ->afterStateHydrated(function (Select $component, $state, $record) {
+                            //     if ($record && $record->currentBarangay) {
+                            //         $component->state($record->currentBarangay->barangay_id);
+                            //     }
+                            // }),
 
                             DatePicker::make('term_start')
                             ->label('Term Start Date')
@@ -144,7 +429,11 @@ class UserResource extends Resource
                                 }
                             }),
                         ])
-                        ->columns(3)
+                        ->columns([
+                            'default' => 1,
+                            'md' => 2,
+                            'lg' => 2,
+                        ])
                         ->visible(function (Get $get) {
                             $selectedRoles = $get('roles');
 

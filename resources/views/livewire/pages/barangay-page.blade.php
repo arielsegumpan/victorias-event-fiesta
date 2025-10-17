@@ -20,8 +20,8 @@
                 <a href="{{ route('barangay-single.page', $barangay->brgy_slug) }}">
                     <div class="flex items-center gap-x-4 mb-3">
                         <div
-                            class="inline-flex justify-center items-center size-15.5 rounded-full border-4 border-orange-50 bg-orange-100 dark:border-orange-900 dark:bg-orange-800">
-                            <img class="shrink-0 size-14 object-fit-cover"
+                            class="inline-flex justify-center items-center ">
+                            <img class="size-12 object-fit-cover"
                                 src="{{ asset(Storage::url($barangay->brgy_logo)) }}" alt="{{ $barangay->brgy_name }}">
                         </div>
                         <div class="shrink-0">

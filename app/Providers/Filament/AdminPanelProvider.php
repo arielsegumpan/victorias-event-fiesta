@@ -65,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
                 PhosphorIcons::make()->thin()
-            ]);
+            ])
+            ->databaseNotifications();
     }
 }

@@ -3,13 +3,14 @@
     <!-- Blog Article -->
     <div class="max-w-3xl px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto">
         <div class="max-w-2xl">
+            @if($this->currentCaptain?->user?->name)
             <!-- Avatar Media -->
             <div class="flex justify-between items-center mb-6">
                 <div class="flex w-full sm:items-center gap-x-5 sm:gap-x-3">
                     <div class="shrink-0">
                         <img class="size-12 rounded-full"
-                            src="https://avatar.iran.liara.run/username?username={{ $this->currentCaptain->user->name }}"
-                            alt="{{ $this->currentCaptain->user->name }}">
+                            src="https://avatar.iran.liara.run/username?username={{ $this->currentCaptain->user->name ?? 'user' }}"
+                            alt="{{ $this->currentCaptain->user->name ?? 'N/A' }}">
                     </div>
 
                     <div class="grow">
@@ -19,9 +20,9 @@
                                 <div class="hs-tooltip [--trigger:hover] [--placement:bottom] inline-block">
                                     <div class="hs-tooltip-toggle sm:mb-1 block text-start cursor-pointer">
                                         <span class="font-semibold text-gray-800 dark:text-neutral-200">
-                                            {{ $this->currentCaptain->user->name }}
+                                            {{ $this->currentCaptain->user->name}}
                                         </span>
-
+                                        @if($this->currentCaptain?->user?->roles->first()->name)
                                         <div class="inline-flex flex-wrap gap-2">
                                             <div>
                                                 <span
@@ -35,10 +36,11 @@
                                                         </path>
                                                         <path d="m9 12 2 2 4-4"></path>
                                                     </svg>
-                                                    {{ Str::title($this->currentCaptain->user->roles->first()->name) }}
+                                                    {{ Str::title($this->currentCaptain?->user?->roles->first()->name) }}
                                                 </span>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <!-- End Tooltip -->
@@ -46,13 +48,15 @@
                                 <ul class="text-xs text-gray-500 dark:text-neutral-500">
                                     <li
                                         class="inline-block relative pe-6 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-2 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:text-neutral-400 dark:before:bg-neutral-600">
-                                        {{ $this->currentCaptain->user->email }}
+                                        {{ $this->currentCaptain?->user?->email ?? 'N/A' }}
                                     </li>
+                                    @if ($this->currentCaptain?->term_start && $this->currentCaptain?->term_end)
                                     <li
                                         class="inline-block relative pe-6 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-2 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:text-neutral-400 dark:before:bg-neutral-600">
                                         {{ $this->currentCaptain->term_start->format('M d, Y') . ' - ' .
                                         $this->currentCaptain->term_end->format('M d, Y') }}
                                     </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -60,6 +64,7 @@
                 </div>
             </div>
             <!-- End Avatar Media -->
+            @endif
 
             <!-- Content -->
             <div class="space-y-5 md:space-y-8">

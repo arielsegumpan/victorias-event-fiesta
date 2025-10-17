@@ -73,12 +73,12 @@ class User extends Authenticatable implements FilamentUser
 
         return match ($role) {
             'super_admin' => Filament::getPanel('admin')->getUrl(),
+             'victoriasanon' => redirect()->route('home.page'),
             'barangay captain' => Filament::getPanel('fiesta')->getUrl(),
             'barangay_captain' => Filament::getPanel('fiesta')->getUrl(),
             'brgy captain' => Filament::getPanel('fiesta')->getUrl(),
             'brgy_captain' => Filament::getPanel('fiesta')->getUrl(),
             'captain' => Filament::getPanel('fiesta')->getUrl(),
-            'victoriasanon' => redirect()->route('home.page'),
             default => Filament::getPanel('auth')->getUrl(),
         };
     }

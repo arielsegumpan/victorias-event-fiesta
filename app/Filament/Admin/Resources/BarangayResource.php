@@ -197,44 +197,47 @@ class BarangayResource extends Resource
                 ]),
 
                 Group::make([
-                    Section::make()
-                    ->schema([
-                        Section::make('Barangay Captain Assignment')
-                        ->schema([
-                            Select::make('barangay_captain_id')
-                            ->label('Assign Barangay Captain')
-                            ->options(function () {
-                                return \App\Models\User::whereHas('roles', function ($query) {
-                                    $query->whereIn('name', [
-                                        'barangay captain',
-                                        'barangay_captain',
-                                        'brgy captain',
-                                        'brgy_captain',
-                                        'captain',
-                                    ]);
-                                })
-                                ->pluck('name', 'id');
-                            })
-                            ->searchable()
-                            ->preload()
-                            ->native(false)
-                            ->required()
-                            ->afterStateHydrated(function (Select $component, $state, $record) {
-                                // Load current captain when editing
-                                if ($record) {
-                                    $currentCaptain = $record->currentCaptain;
-                                    if ($currentCaptain) {
-                                        $component->state($currentCaptain->user_id);
-                                    }
-                                }
-                            })
-                            ->dehydrated(false)
-                            ->helperText(fn ($record) => $record && $record->currentCaptain
-                                ? 'Current captain since: ' . $record->currentCaptain->term_start->format('M d, Y')
-                                : null
-                            ),
-                        ])
-                    ]),
+                    // Section::make()
+                    // ->schema([
+                    //     Section::make('Barangay Captain Assignment')
+                    //     ->schema([
+                    //         Select::make('barangay_captain_id')
+                    //         ->label('Assign Barangay Captain')
+                    //         ->options(function () {
+                    //             return \App\Models\User::whereHas('roles', function ($query) {
+                    //                 $query->whereIn('name', [
+                    //                     'barangay captain',
+                    //                     'barangay_captain',
+                    //                     'brgy captain',
+                    //                     'brgy_captain',
+                    //                     'captain',
+                    //                 ]);
+                    //             })
+                    //             ->pluck('name', 'id');
+                    //         })
+                    //         ->searchable()
+                    //         ->preload()
+                    //         ->native(false)
+                    //         ->required()
+                    //         ->afterStateHydrated(function (Select $component, $state, $record) {
+                    //             // Load current captain when editing
+                    //             if ($record && $record->currentCaptain) {
+                    //                 $component->state($record->currentCaptain->user_id);
+                    //             }
+                    //             // if ($record) {
+                    //             //     $currentCaptain = $record->currentCaptain;
+                    //             //     if ($currentCaptain) {
+                    //             //         $component->state($currentCaptain->user_id);
+                    //             //     }
+                    //             // }
+                    //         })
+                    //         ->dehydrated(false)
+                    //         ->helperText(fn ($record) => $record && $record->currentCaptain
+                    //             ? 'Current captain since: ' . $record->currentCaptain->term_start->format('M d, Y')
+                    //             : null
+                    //         ),
+                    //     ])
+                    // ]),
 
 
                     Section::make()

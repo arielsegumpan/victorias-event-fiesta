@@ -19,23 +19,23 @@ class CreateBarangay extends CreateRecord
     }
 
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        // $data['created_by'] = $data[''];
-        dd($data);
-        return $data;
-    }
+    // protected function mutateFormDataBeforeCreate(array $data): array
+    // {
+    //     // $data['created_by'] = $data[''];
+    //     dd($data);
+    //     return $data;
+    // }
 
-    protected function afterCreate(): void
-    {
-        // Assign captain after barangay is created
-        if ($this->captainUserId) {
-            $this->record->barangayCaptains()->create([
-                'user_id' => $this->captainUserId,
-                'term_start' => now(),
-                'term_end' => null,
-            ]);
-        }
-    }
+    // protected function afterCreate(): void
+    // {
+    //     // Assign captain after barangay is created
+    //     if ($this->captainUserId) {
+    //         $this->record->barangayCaptains()->create([
+    //             'user_id' => $this->captainUserId,
+    //             'term_start' => now(),
+    //             'term_end' => null,
+    //         ]);
+    //     }
+    // }
 
 }
