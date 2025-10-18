@@ -24,6 +24,10 @@ class PanelRoleMiddleware
             return redirect()->route('filament.auth.auth.login');
         }
 
+        if ($user->hasRole('victoriasanon')) {
+            return redirect()->route('home.page');
+        }
+
         // Define panel-to-role mapping
         $panelRoles = [
             'admin' => 'super_admin',
