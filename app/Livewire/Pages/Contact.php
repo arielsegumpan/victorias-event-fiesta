@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Pages;
 
-use App\Models\Contact as ContactModel;
 use Livewire\Component;
+use App\Mail\ContactMail;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactAdminNotification;
+use App\Models\Contact as ContactModel;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
@@ -63,9 +66,16 @@ class Contact extends Component
         // Increment rate limiter
         RateLimiter::hit($key, 3600); // 1 hour decay
 
-        // Optional: Send notification to admin
-        // Notification::route('mail', config('mail.admin_email'))
-        //     ->notify(new NewContactSubmission($sanitizedData));
+
+        Mail::to(config('mail.admin_email'))
+            ->send(new ContactAdminNotification(
+                $sanitizedData['name'],
+                $sanitizedData['email'],
+                $sanitizedData['phone'],
+                $sanitizedData['message']
+            ));
+
+        Mail::to($sanitizedData['email'])->send(new ContactMail($sanitizedData['name']));
 
         $this->reset(['firstName', 'lastName', 'email', 'phone', 'message']);
         $this->submitted = true;

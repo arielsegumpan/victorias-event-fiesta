@@ -14,6 +14,8 @@ return [
     |
     */
 
+    'admin_email' => env('MAIL_ADMIN_EMAIL', 'admin@gmail.com'),
+
     'default' => env('MAIL_MAILER', 'log'),
 
     /*
@@ -111,8 +113,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Admin'),
     ],
 
 ];

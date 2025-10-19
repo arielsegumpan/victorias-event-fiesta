@@ -41,6 +41,7 @@ use App\Filament\Admin\Resources\FiestaResource\Pages;
 use App\Filament\Admin\Resources\FiestaResource\Pages\EditFiesta;
 use App\Filament\Admin\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Admin\Resources\FiestaResource\RelationManagers;
+use App\Filament\Admin\Resources\FiestaResource\Pages\ManageFiestaReviews;
 use App\Filament\Admin\Resources\FiestaResource\Pages\ManageFiestaComments;
 
 class FiestaResource extends Resource
@@ -387,7 +388,7 @@ class FiestaResource extends Resource
             'create' => Pages\CreateFiesta::route('/create'),
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
             'view' => Pages\ViewFiesta::route('/{record}'),
-            'comments' => ManageFiestaComments::route('/{record}/comments'),
+            'reviews' => ManageFiestaReviews::route('/{record}/reviews'),
         ];
     }
 
@@ -397,7 +398,7 @@ class FiestaResource extends Resource
         return $page->generateNavigationItems([
             ViewFiesta::class,
             EditFiesta::class,
-            ManageFiestaComments::class
+            ManageFiestaReviews::class
         ]);
     }
 

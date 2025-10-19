@@ -3,14 +3,14 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactMail extends Mailable implements ShouldQueue
+class ContactAdminNotification extends Mailable  implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,10 @@ class ContactMail extends Mailable implements ShouldQueue
      */
     public function __construct(
         public string $name,
-    ){}
+        public string $email,
+        public string $phone,
+        public string $message
+    ) {}
 
     /**
      * Get the message envelope.
@@ -28,7 +31,8 @@ class ContactMail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             from: new Address(config('mail.from.address'), config('mail.from.name')),
-            subject: 'Thank You for Contacting Us',
+            replyTo: [new Address($this->email, $this->name)],
+            subject: 'New Contact Form Submission',
         );
     }
 
@@ -38,7 +42,7 @@ class ContactMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.contact-mail',
+            markdown: 'mail.contact-admin-notification',
         );
     }
 

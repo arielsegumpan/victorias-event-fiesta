@@ -122,7 +122,7 @@ class ContactResource extends Resource
                             ->label('Reply Subject')
                             ->required()
                             ->disabled()
-                            ->default(fn (Contact $record) => 'Re: ' . ucwords($record->subject)),
+                            ->default(fn (Contact $record) => 'Re: ' . ucwords($record->subject ?? 'Contact Inquiry')),
 
                         RichEditor::make('reply_message')
                             ->label('Reply Message')
@@ -134,6 +134,7 @@ class ContactResource extends Resource
                             // Send Markdown email
                             Mail::to($record->email)
                                 ->send(new ContactReply(
+                                    $record->name,
                                     $record->email,
                                     $record->message,
                                     $data['reply_message']
