@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Admin\Resources\FiestaResource\Pages;
+namespace App\Filament\Fiesta\Resources\FiestaResource\Pages;
 
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Infolists\Infolist;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -15,16 +14,11 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Infolists\Components\IconEntry;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\ImageEntry;
 use Mokhosh\FilamentRating\Components\Rating;
-use Mokhosh\FilamentRating\Entries\RatingEntry;
-use App\Filament\Admin\Resources\FiestaResource;
 use Mokhosh\FilamentRating\Columns\RatingColumn;
+use App\Filament\Fiesta\Resources\FiestaResource;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Infolists\Components\TextEntry\TextEntrySize;
 
 class ManageFiestaReviews extends ManageRelatedRecords
 {
@@ -49,6 +43,7 @@ class ManageFiestaReviews extends ManageRelatedRecords
     {
         return 'Manage Reviews';
     }
+
 
     public function form(Form $form): Form
     {
@@ -188,40 +183,5 @@ class ManageFiestaReviews extends ManageRelatedRecords
             ])
             ->emptyStateIcon('phosphor-chat-teardrop-text')
             ->emptyStateHeading('No reviews are created');
-    }
-
-
-    public function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->columns(2)
-            ->schema([
-                TextEntry::make('fiesta.f_name')
-                ->columnSpanFull()
-                ->size(TextEntrySize::Large)
-                ->weight('bold')
-                ->color('primary')
-                ->label('Title'),
-
-                RatingEntry::make('rating')
-                ->size('sm'),
-
-                TextEntry::make('user.name')
-                ->badge()->color('success')
-                ->label('Commented user'),
-
-                TextEntry::make('review')
-                    ->label('Review')
-                    ->markdown()
-                    ->columnSpanFull(),
-
-                ImageEntry::make('review_images')
-                    ->stacked()
-                    ->stacked()
-                    ->circular()
-                    ->size(70)
-                    ->limit(5)
-
-            ]);
     }
 }

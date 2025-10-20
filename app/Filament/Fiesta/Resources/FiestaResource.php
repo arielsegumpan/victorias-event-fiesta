@@ -40,6 +40,7 @@ use App\Filament\Fiesta\Resources\FiestaResource\Pages;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages\EditFiesta;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages\ViewFiesta;
 use App\Filament\Fiesta\Resources\FiestaResource\RelationManagers;
+use App\Filament\Fiesta\Resources\FiestaResource\Pages\ManageFiestaReviews;
 use App\Filament\Fiesta\Resources\FiestaResource\Pages\ManageFiestaComments;
 
 class FiestaResource extends Resource
@@ -59,7 +60,7 @@ class FiestaResource extends Resource
         $count = static::getModel()::where('created_by', auth()->id())->count();
         return $count > 0 ? (string) $count : null;
     }
-    
+
     public static function getNavigationBadgeColor(): ?string
     {
         return static::getModel()::count() > 0 ? 'success' : 'primary';
@@ -391,7 +392,7 @@ class FiestaResource extends Resource
             'create' => Pages\CreateFiesta::route('/create'),
             'edit' => Pages\EditFiesta::route('/{record}/edit'),
             'view' => ViewFiesta::route('/{record}'),
-            'comments' => ManageFiestaComments::route('/{record}/comments'),
+            'reviews' => ManageFiestaReviews::route('/{record}/reviews'),
         ];
     }
 
@@ -402,7 +403,7 @@ class FiestaResource extends Resource
         return $page->generateNavigationItems([
             ViewFiesta::class,
             EditFiesta::class,
-            ManageFiestaComments::class
+            ManageFiestaReviews::class
         ]);
     }
 

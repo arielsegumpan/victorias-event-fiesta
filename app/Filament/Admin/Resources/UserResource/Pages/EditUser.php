@@ -35,11 +35,11 @@ class EditUser extends EditRecord
         return $data;
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        unset($data['barangay_id'], $data['term_start'], $data['term_end']);
-        return $data;
-    }
+    // protected function mutateFormDataBeforeSave(array $data): array
+    // {
+    //     unset($data['barangay_id'], $data['term_start'], $data['term_end']);
+    //     return $data;
+    // }
 
     protected function afterSave(): void
     {
