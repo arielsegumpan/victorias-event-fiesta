@@ -85,7 +85,7 @@ class Register extends BaseRegister
 
     protected function assignUserProfileRole(User $user): void
     {
-        $userRole = Role::firstOrCreate(['name' => 'vitoriasanon']);
+        $userRole = Role::firstOrCreate(['name' => 'victoriasanon']);
         $user->assignRole($userRole);
     }
 
